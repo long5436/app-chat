@@ -8,7 +8,7 @@
         </div>
         <div :class="$style.content">
           <div :class="$style.info">
-            <h3>Nguoi dung</h3>
+            <h3>Design Team</h3>
             <div :class="$style.time">
               <IconCheck :class="$style.icon" />
               12:45

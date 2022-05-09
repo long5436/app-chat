@@ -22,7 +22,7 @@ import Search from "@/components/sidebar/Search.vue";
   //   background: #000;
   //   border-right: 1px solid #ddd;
   box-shadow: 2px 0 20px 2px rgba(136, 136, 136, 0.212);
-  padding: 12px;
+  padding: 18px;
 
   .search {
     margin: 12px 0;
@@ -32,6 +32,7 @@ import Search from "@/components/sidebar/Search.vue";
 .main {
   position: fixed;
   right: 0px;
-  width: calc(100vh - 300px);
+  left: 300px;
+  //   width: calc(100vh);
 }
 </style>
