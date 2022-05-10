@@ -12,15 +12,19 @@
       </div>
     </div>
   </div>
+  <div :class="$style.main">
+    <MessageBox />
+  </div>
 </template>
 
 <script setup>
+import MessageBox from "@/components/index/MessageBox.vue";
 </script>
 
 <style lang="scss" module>
 .header {
   padding: 18px;
-  box-shadow: 0px 2px 20px 2px rgba(136, 136, 136, 0.212);
+  box-shadow: 20px 2px 20px 2px rgba(136, 136, 136, 0.212);
   .headerLeft {
     .info {
       display: flex;
@@ -44,5 +48,13 @@
       }
     }
   }
+}
+
+.main {
+  overflow: hidden;
+  padding: 18px;
+  width: 100%;
+  // height: 40px;
+  // background: #000;
 }
 </style>
