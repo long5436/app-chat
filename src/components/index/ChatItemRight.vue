@@ -1,19 +1,19 @@
 <template>
   <div :class="$style.message">
     <span :class="$style.content">
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis
-      magni quia in mollitia inventore sint maiores voluptatum nam tenetur
-      dolorum voluptas et beatae, iusto, odit illo laboriosam cumque deleniti
-      alias!
+      {{ content }}
     </span>
   </div>
 </template>
 
 <script setup>
+//
+const props = defineProps(["content"]);
 </script>
 
 <style lang="scss" module>
 .message {
+  position: relative;
   display: flex;
   justify-content: flex-end;
   // margin: 12px 0;
@@ -59,5 +59,15 @@
     flex: 1;
     background: #fff;
   }
+
+  // &::after {
+  //   content: "";
+  //   position: absolute;
+  //   top: -100%;
+  //   bottom: -100%;
+  //   right: -16px;
+  //   width: 16px;
+  //   background: #fff;
+  // }
 }
 </style>

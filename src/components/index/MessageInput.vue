@@ -37,8 +37,12 @@ watch(text, (newValue) => store.setChatInput(newValue));
 // methods
 
 function sendMessage() {
-  console.log(text.value);
-  text.value = "";
+  if (text.value) {
+    console.log(text.value);
+    store.addhatInput(text.value);
+    text.value = "";
+    window.scrollTo(0, 0);
+  }
 }
 </script>
 

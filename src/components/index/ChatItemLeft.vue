@@ -1,10 +1,14 @@
 <template>
   <div :class="$style.message">
-    <span :class="$style.content"> lorem ipsum dolor sit </span>
+    <span :class="$style.content">
+      {{ content }}
+    </span>
   </div>
 </template>
 
 <script setup>
+//
+const props = defineProps(["content"]);
 </script>
 
 <style lang="scss" module>

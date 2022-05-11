@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "pinia": "^2.0.13",
+    "uniqid": "^5.4.0",
     "vue": "^3.2.33",
     "vue-router": "^4.0.14",
-    "vue3-perfect-scrollbar": "^1.6.0"
+    "vue3-perfect-scrollbar": "^1.6.0",
+    "vue3-smooth-scroll": "^0.8.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.1",
