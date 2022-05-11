@@ -1,16 +1,14 @@
 import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore({
-  id: 'counter',
+export const chatStore = defineStore({
+  id: 'chat',
   state: () => ({
-    counter: 0
+    chatIput: ''
   }),
   getters: {
-    doubleCount: (state) => state.counter * 2
+    getChatInput: (state) => state.chatIput
   },
   actions: {
-    increment() {
-      this.counter++
-    }
+    setChatInput(value) { this.chatIput = value }
   }
 })

@@ -4,12 +4,17 @@
       <IconStaple :class="$style.icon" />
     </button>
     <div :class="$style.input">
-      <input type="text" placeholder="Nhập tin nhắn" />
+      <input
+        type="text"
+        placeholder="Nhập tin nhắn"
+        @keyup.enter="sendMessage"
+        v-model="text"
+      />
       <button :class="$style.emoji">
         <IconSmile :class="$style.icon" />
       </button>
     </div>
-    <button :class="$style.btn">
+    <button :class="$style.btn" @click="sendMessage">
       <IconSend :class="$style.icon" />
     </button>
   </div>
@@ -19,6 +24,22 @@
 import IconSend from "@/components/icons/Send.vue";
 import IconSmile from "@/components/icons/Smile.vue";
 import IconStaple from "@/components/icons/Staple.vue";
+import { ref, watch } from "vue";
+import { chatStore } from "@/stores/counter";
+
+//
+const text = ref("");
+const store = chatStore();
+
+// hooks
+watch(text, (newValue) => store.setChatInput(newValue));
+
+// methods
+
+function sendMessage() {
+  console.log(text.value);
+  text.value = "";
+}
 </script>
 
 <style lang="scss" module>
@@ -27,11 +48,11 @@ import IconStaple from "@/components/icons/Staple.vue";
   bottom: 0;
   width: 100%;
   height: 50px;
+  margin-top: 24px;
   //   background: #000;
   //   border-top: 1px solid #eee;
   display: flex;
-  //   padding: 6px;
-  //   overflow: hidden;
+  // overflow: hidden;
 
   .input {
     flex: 1;
