@@ -13,11 +13,13 @@
     </div>
   </div>
   <div :class="$style.main">
+    <MessageChat />
     <MessageBox />
   </div>
 </template>
 
 <script setup>
+import MessageChat from "@/components/index/MessageChat.vue";
 import MessageBox from "@/components/index/MessageBox.vue";
 </script>
 

@@ -1,5 +1,8 @@
 <template>
   <div :class="$style.message">
+    <button :class="$style.btnStaple">
+      <IconStaple :class="$style.icon" />
+    </button>
     <div :class="$style.input">
       <input type="text" placeholder="Nhập tin nhắn" />
       <button :class="$style.emoji">
@@ -15,6 +18,7 @@
 <script setup>
 import IconSend from "@/components/icons/Send.vue";
 import IconSmile from "@/components/icons/Smile.vue";
+import IconStaple from "@/components/icons/Staple.vue";
 </script>
 
 <style lang="scss" module>
@@ -53,6 +57,18 @@ import IconSmile from "@/components/icons/Smile.vue";
       transform: translateY(1px);
     }
   }
+
+  .btnStaple {
+    margin: 4px;
+    border: 0;
+    background: transparent;
+    .icon {
+      fill: #888;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
   .btn {
     // width: 20;
     width: 42px;
@@ -65,6 +81,11 @@ import IconSmile from "@/components/icons/Smile.vue";
       height: 20px;
       fill: #fff;
       //   transform: rotate(45deg);
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: #df8999;
     }
   }
 }
