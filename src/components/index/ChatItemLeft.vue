@@ -15,45 +15,15 @@ const props = defineProps(["content"]);
 .message {
   display: flex;
   justify-content: flex-start;
-  border-color: #fff;
-  border-width: 12px 0;
   margin: 6px 0;
   .content {
     position: relative;
     display: inline-block;
     max-width: 400px;
-    // border-radius: 10px;
-    background: #a2eef3;
+    background: #e4e4e4;
     padding: 12px;
-
-    &::before {
-      content: "";
-      position: absolute;
-      inset: -6px;
-      border-radius: 18px;
-      border: 6px solid #fff;
-    }
-
-    &::after {
-      content: "";
-      position: absolute;
-      top: -6px;
-      left: 0px;
-      /* z-index: -1; */
-      width: 100vw;
-      bottom: -6px;
-      /* border-radius: 18px; */
-      /* border: 6px solid #fff; */
-      border-width: 6px 0 6px 0;
-      border-color: #fff;
-      border-style: solid;
-    }
+    border-radius: 10px;
   }
 
-  &::after {
-    content: "";
-    flex: 1;
-    background: #fff;
-  }
 }
 </style>

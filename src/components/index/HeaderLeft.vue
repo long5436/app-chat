@@ -5,7 +5,7 @@
         <img src="../../assets/img/avata.png" alt="" />
       </div>
       <div :class="$style.content">
-        <h2>Design Teams</h2>
+        <h3>Design Teams</h3>
         <p :class="$style.status">Đang hoạt động</p>
       </div>
     </div>

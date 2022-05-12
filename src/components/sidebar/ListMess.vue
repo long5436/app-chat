@@ -1,14 +1,14 @@
 <template>
   <perfect-scrollbar :class="$style.ok">
     <div :class="$style.list">
-      <div :class="$style.message" v-for="i in 20" :key="i.index">
+      <div :class="$style.message" v-for="i in 5" :key="i.index">
         <div :class="$style.avatar">
           <img src="../../assets/img/avata.png" alt="" />
           <span :class="$style.active"></span>
         </div>
         <div :class="$style.content">
           <div :class="$style.info">
-            <h3>Design Team</h3>
+            <h4>Design Team</h4>
             <div :class="$style.time">
               <IconCheck :class="$style.icon" />
               12:45

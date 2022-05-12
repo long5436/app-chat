@@ -17,7 +17,8 @@ import HeaderLeft from "@/components/index/HeaderLeft.vue";
 <style lang="scss" module>
 .header {
   padding: 18px;
-  box-shadow: 20px 2px 20px 2px rgba(136, 136, 136, 0.212);
+  // box-shadow: 20px 2px 20px 2px rgba(136, 136, 136, 0.212);
+  border-bottom: 1px solid #ddd;
 }
 
 .main {

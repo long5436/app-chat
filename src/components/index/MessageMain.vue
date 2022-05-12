@@ -49,17 +49,6 @@ dataChat.data = store.getMessageList;
 </script>
 
 <style lang="scss" module>
-// .scroll {
-//   display: flex;
-//   flex-direction: column;
-//   height: 100%;
-//   overflow-x: hidden;
-//   &::after {
-//     content: "";
-//     flex: 1;
-//     background: #fff;
-//   }
-// }
 .box {
   // flex: 1;
   position: relative;
@@ -68,25 +57,8 @@ dataChat.data = store.getMessageList;
   flex-direction: column;
   overflow: scroll;
   overflow-x: hidden;
-  background: linear-gradient(to top, #ffe6d2, #ffd2da);
   margin: 0 16px;
-  // padding-right: 16px;
-
-  &::after {
-    content: "";
-    flex: 1;
-    background: #fff;
-  }
-
-  // &::before {
-  //   position: absolute;
-  //   content: "";
-  //   right: 0;
-  //   top: 0;
-  //   bottom: 0;
-  //   height: 100%;
-  //   width: 16px;
-  //   background: #fff;
-  // }
+  padding-right: 12px;
+ 
 }
 </style>

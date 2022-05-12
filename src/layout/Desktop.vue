@@ -20,8 +20,8 @@ import Search from "@/components/sidebar/Search.vue";
   width: 300px;
   height: 100vh;
   //   background: #000;
-  //   border-right: 1px solid #ddd;
-  box-shadow: 2px 0 20px 2px rgba(136, 136, 136, 0.212);
+    border-right: 1px solid #ddd;
+  // box-shadow: 2px 0 20px 2px rgba(136, 136, 136, 0.212);
   padding: 18px;
 
   .search {
