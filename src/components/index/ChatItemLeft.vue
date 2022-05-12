@@ -1,8 +1,9 @@
 <template>
   <div :class="$style.message">
-    <span :class="$style.content">
+    <div :class="$style.content">
       {{ content }}
-    </span>
+      <p :class="$style.time">23:12, 12 tháng 4, 2022</p>
+    </div>
   </div>
 </template>
 
@@ -23,6 +24,14 @@ const props = defineProps(["content"]);
     background: #e4e4e4;
     padding: 12px;
     border-radius: 10px;
+  }
+
+   .time {
+        margin-right: 12px;
+    text-align: right;
+    font-weight: bold;
+    opacity: 0.5;
+    font-size: 0.7rem;
   }
 
 }
