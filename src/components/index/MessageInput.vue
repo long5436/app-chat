@@ -3,6 +3,9 @@
     <button :class="$style.btnStaple">
       <IconStaple :class="$style.icon" />
     </button>
+     <button :class="$style.btnStaple">
+      <IconImage :class="$style.icon" />
+    </button>
     <div :class="$style.input">
       <input
         type="text"
@@ -24,6 +27,7 @@
 import IconSend from "@/components/icons/Send.vue";
 import IconSmile from "@/components/icons/Smile.vue";
 import IconStaple from "@/components/icons/Staple.vue";
+import IconImage from "@/components/icons/Image.vue";
 import { ref, watch } from "vue";
 import { chatStore } from "@/stores/counter";
 

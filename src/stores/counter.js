@@ -1,45 +1,82 @@
-import { defineStore } from 'pinia'
-import uniqid from 'uniqid';
+import { defineStore } from "pinia";
+import uniqid from "uniqid";
 
 export const chatStore = defineStore({
-  id: 'chat',
+  id: "chat",
   state: () => ({
-    chatIput: '',
+    chatIput: "",
     messageList: [
       {
         id: 0,
         user: 1,
-        content: 'This page contains documentation for Vue 2. The Vue 3 version of the URL you are visiting is: https://vuejs.org/guide/essentials/event-handling.html.'
+        content: "Xong chưa các bác ?",
       },
       {
         id: 1,
         user: 2,
-        content: 'This page contains documentation for Vue 2. The Vue 3 version of the URL you are visiting is: https://vuejs.org/guide/essentials/event-handling.html.'
+        content: "Chưa 🤣 đang nghiên cứu",
       },
       {
         id: 2,
         user: 1,
-        content: 'This page contains documentation for Vue 2. The Vue 3 version of the URL you are visiting is: https://vuejs.org/guide/essentials/event-handling.html.'
+        content: "Làm được tới đâu rồi",
       },
       {
         id: 3,
         user: 2,
-        content: 'This page contains documentation for Vue 2. The Vue 3 version of the URL you are visiting is: https://vuejs.org/guide/essentials/event-handling.html.'
-      }
-    ]
+        content: "Sắp xong rồi",
+      },
+      {
+        id: 3,
+        user: 1,
+        content: "Ok tranh thử nhé :v",
+      },
+      {
+        id: 3,
+        user: 1,
+        content: "Test :v",
+      },
+      {
+        id: 3,
+        user: 1,
+        content: "Test :v",
+      },
+      {
+        id: 3,
+        user: 1,
+        content: "Test :v",
+      },
+      {
+        id: 3,
+        user: 1,
+        content: "Test :v",
+      },
+      {
+        id: 3,
+        user: 1,
+        content: "Test :v",
+      },
+      {
+        id: 3,
+        user: 1,
+        content: "Test :v",
+      },
+    ],
   }),
   getters: {
     getChatInput: (state) => state.chatIput,
-    getMessageList: state => state.messageList
+    getMessageList: (state) => state.messageList,
   },
   actions: {
-    setChatInput(value) { this.chatIput = value },
+    setChatInput(value) {
+      this.chatIput = value;
+    },
     addhatInput(value) {
       this.messageList.push({
         id: uniqid(),
         user: 1,
-        content: value 
-      })
-    }
-  }
-})
+        content: value,
+      });
+    },
+  },
+});

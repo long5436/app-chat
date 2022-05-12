@@ -39,5 +39,6 @@ const props = defineProps(["content"]);
     opacity: 0.5;
     font-size: 0.7rem;
   }
+
 }
 </style>
