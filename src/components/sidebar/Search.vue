@@ -50,6 +50,7 @@ function clearText() {
     border: 0;
     background: transparent;
     // padding-right: 12px;
+    width: 100px;
     overflow: hidden;
   }
 }

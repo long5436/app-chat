@@ -12,9 +12,26 @@ import {
   FaRegularEyeSlash,
   FaFacebook,
   FcGoogle,
+  FaUserFriends,
+  HiLogout,
+  BiImageFill,
+  IoSend,
+  MdAttachfileRound,
+  BiCheck2,
 } from "oh-vue-icons/icons";
 
-addIcons(MdRemoveredeye, FaRegularEyeSlash, FaFacebook, FcGoogle);
+addIcons(
+  MdRemoveredeye,
+  FaRegularEyeSlash,
+  FaFacebook,
+  FcGoogle,
+  FaUserFriends,
+  HiLogout,
+  BiImageFill,
+  IoSend,
+  MdAttachfileRound,
+  BiCheck2
+);
 
 const app = createApp(App);
 

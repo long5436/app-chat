@@ -1,8 +1,12 @@
 <template>
   <div :class="$style.siderBar">
-    <h1>Chat</h1>
-    <Search :class="$style.search" />
-    <ListMess />
+    <div>
+      <Menu />
+    </div>
+    <div :class="$style.childrenSideBar">
+      <Search :class="$style.search" />
+      <ListMess />
+    </div>
   </div>
   <div :class="$style.main">
     <slot></slot>
@@ -12,17 +16,22 @@
 <script setup>
 import ListMess from "@/components/sidebar/ListMess.vue";
 import Search from "@/components/sidebar/Search.vue";
+import Menu from "@/components/sidebar/Menu.vue";
 </script>
 
 <style lang="scss" module>
 .siderBar {
   position: fixed;
-  width: 300px;
+  display: flex;
+  width: 350px;
   height: 100vh;
   //   background: #000;
-    border-right: 1px solid #ddd;
+  border-right: 1px solid #ddd;
   // box-shadow: 2px 0 20px 2px rgba(136, 136, 136, 0.212);
-  padding: 18px;
+
+  .childrenSideBar {
+    padding: 18px;
+  }
 
   .search {
     margin: 12px 0;
@@ -32,7 +41,7 @@ import Search from "@/components/sidebar/Search.vue";
 .main {
   position: fixed;
   right: 0px;
-  left: 300px;
+  left: 350px;
   //   width: calc(100vh);
 }
 </style>

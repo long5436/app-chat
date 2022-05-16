@@ -13,10 +13,10 @@ import SignInWith from "./SignInWith.vue";
 .loginForm {
   max-width: 480px;
   width: 100%;
-  border: 2px solid #fff;
+  border: 1px solid #fff;
   padding: 20px;
   background: rgba(205, 198, 239, 0.2);
-  border-radius: 22px;
+  border-radius: 20px;
 }
 
 .orLogin {

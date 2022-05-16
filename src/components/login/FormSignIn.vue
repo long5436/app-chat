@@ -101,6 +101,11 @@ function changePasswordHide() {
     background: #fc6b67;
     color: #fff;
     font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+      filter: brightness(95%);
+    }
   }
 
   .forgetPass {

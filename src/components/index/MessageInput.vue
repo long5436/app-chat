@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.message">
     <button :class="$style.btnStaple">
-      <IconStaple :class="$style.icon" />
+      <v-icon name="md-attachfile-round" :class="$style.icon" />
     </button>
-     <button :class="$style.btnStaple">
-      <IconImage :class="$style.icon" />
+    <button :class="$style.image">
+      <v-icon name="bi-image-fill" :class="$style.icon" />
     </button>
     <div :class="$style.input">
       <input
@@ -17,19 +17,16 @@
         <IconSmile :class="$style.icon" />
       </button>
     </div>
-    <button :class="$style.btn" @click="sendMessage">
-      <IconSend :class="$style.icon" />
+    <button :class="$style.btnSend" @click="sendMessage">
+      <v-icon name="io-send" :class="$style.icon" />
     </button>
   </div>
 </template>
 
 <script setup>
-import IconSend from "@/components/icons/Send.vue";
-import IconSmile from "@/components/icons/Smile.vue";
-import IconStaple from "@/components/icons/Staple.vue";
-import IconImage from "@/components/icons/Image.vue";
 import { ref, watch } from "vue";
 import { chatStore } from "@/stores/counter";
+import IconSmile from "@/components/icons/Smile.vue";
 
 //
 const text = ref("");
@@ -76,6 +73,7 @@ function sendMessage() {
       border: 0;
       background: transparent;
       padding-left: 16px;
+      width: 100px;
     }
 
     .emoji {
@@ -95,12 +93,25 @@ function sendMessage() {
       fill: #888;
       width: 24px;
       height: 24px;
+      transform: rotate(45deg);
     }
   }
 
-  .btn {
+  .image {
+    margin: 4px;
+    border: 0;
+    background: transparent;
+    .icon {
+      fill: #888;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .btnSend {
     // width: 20;
     width: 42px;
+    height: 42px;
     border: 0;
     background: #ffd2da;
     border-radius: 50%;

@@ -10,10 +10,11 @@ const nameIcon = props.icon === "google" ? "fc-google" : "fa-facebook";
 </template>
 <style lang="scss" module>
 .btn {
-  border: 2px solid #fff;
+  border: 1px solid #fff;
   background: transparent;
   border-radius: 8px;
   padding: 4px 30px;
+  cursor: pointer;
 
   .icon {
     height: 30px;

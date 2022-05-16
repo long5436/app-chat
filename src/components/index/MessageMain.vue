@@ -14,7 +14,6 @@ import ChatItemRight from "@/components/index/ChatItemRight.vue";
 import ChatItemLeft from "@/components/index/ChatItemLeft.vue";
 import { chatStore } from "@/stores/counter";
 import { reactive, getCurrentInstance, onMounted, watch, inject } from "vue";
-const smoothScroll = inject("smoothScroll");
 
 //
 const store = chatStore();
@@ -24,7 +23,7 @@ const { proxy } = getCurrentInstance();
 // hooks
 onMounted(() => {
   const element = proxy.$refs.chatMain;
-  console.log(element);
+  // console.log(element);
   element.scrollTop = element.scrollHeight;
 });
 
@@ -59,6 +58,5 @@ dataChat.data = store.getMessageList;
   overflow-x: hidden;
   margin: 0 16px;
   padding-right: 12px;
- 
 }
 </style>

@@ -9,6 +9,6 @@
   /* font-family: Inter, sans-serif; */
 }
 
-/* .ps__rail-y {
-  opacity: 0.3 !important;
-} */
+a, button {
+  cursor: pointer;
+}
