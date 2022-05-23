@@ -4,10 +4,12 @@ import { getAnalytics } from "firebase/analytics";
 import {
   getAuth,
   FacebookAuthProvider,
+  GoogleAuthProvider ,
   signInWithPopup,
   browserSessionPersistence,
   setPersistence,
   onAuthStateChanged,
+  signOut
 } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -30,6 +32,7 @@ const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
 const facebookProvider = new FacebookAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
 export {
   auth,
@@ -39,4 +42,7 @@ export {
   FacebookAuthProvider,
   setPersistence,
   onAuthStateChanged,
+  GoogleAuthProvider ,
+  googleProvider,
+  signOut
 };

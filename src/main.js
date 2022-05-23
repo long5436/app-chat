@@ -1,43 +1,15 @@
-import { createApp } from "vue";
-import { createPinia } from "pinia";
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 
-import App from "./App.vue";
-import router from "./router";
-import PerfectScrollbar from "vue3-perfect-scrollbar";
-import "vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css";
-
+import App from './App.vue'
+import router from './router'
 import { OhVueIcon, addIcons } from "oh-vue-icons";
-import {
-  MdRemoveredeye,
-  FaRegularEyeSlash,
-  FaFacebook,
-  FcGoogle,
-  FaUserFriends,
-  HiLogout,
-  BiImageFill,
-  IoSend,
-  MdAttachfileRound,
-  BiCheck2,
-} from "oh-vue-icons/icons";
+import { BiChevronDown, IoSettingsSharp, IoChatbubbleEllipsesOutline, LaUserFriendsSolid, RiSearch2Line, FaRegularSmile, MdRemoveredeye, FaRegularEyeSlash, FcGoogle, FaFacebook, HiLogout } from "oh-vue-icons/icons";
 
-addIcons(
-  MdRemoveredeye,
-  FaRegularEyeSlash,
-  FaFacebook,
-  FcGoogle,
-  FaUserFriends,
-  HiLogout,
-  BiImageFill,
-  IoSend,
-  MdAttachfileRound,
-  BiCheck2
-);
+const app = createApp(App)
+addIcons(BiChevronDown, IoSettingsSharp, IoChatbubbleEllipsesOutline, LaUserFriendsSolid, RiSearch2Line, FaRegularSmile, MdRemoveredeye, FaRegularEyeSlash, FcGoogle, FaFacebook, HiLogout)
 
-const app = createApp(App);
-
-app.use(createPinia());
-app.use(PerfectScrollbar);
-app.use(router);
-app.component("v-icon", OhVueIcon);
-
-app.mount("#app");
+app.use(createPinia())
+app.use(router)
+app.component("v-icon", OhVueIcon)
+app.mount('#app')

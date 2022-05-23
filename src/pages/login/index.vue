@@ -1,5 +1,5 @@
 <script setup>
-import LoginLayout from "@/layout/LoginLayout.vue";
+import LoginLayout from "@/components/layout/LoginLayout.vue";
 import LoginForm from "@/components/login/LoginForm.vue";
 </script>
 
