@@ -1,6 +1,7 @@
 <script setup>
 import avt from "@/assets/img/av2.jpg";
 import InputChatForm from "./InputChat.vue";
+import ChatView from "./ChatView.vue";
 </script>
 
 <template>
@@ -22,7 +23,9 @@ import InputChatForm from "./InputChat.vue";
   <div :class="$style.body">
     <div :class="$style.wrapper">
       <div :class="$style.content">
-        <div :class="$style.messages">1</div>
+        <div :class="$style.messages">
+          <ChatView />
+        </div>
         <div :class="$style.inputChat">
           <InputChatForm />
         </div>
@@ -91,6 +94,7 @@ import InputChatForm from "./InputChat.vue";
 
       .messages {
         flex: 1;
+        overflow: hidden;
       }
 
       .inputChat {

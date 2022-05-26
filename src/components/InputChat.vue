@@ -1,7 +1,9 @@
 <script setup>
 import { ref, getCurrentInstance, watch } from "vue";
+import { useChatStore } from "@/stores/chat";
 
 //
+const chatStore = useChatStore();
 const { proxy } = getCurrentInstance();
 const input = ref("");
 const textShow = ref("true");
@@ -23,7 +25,8 @@ function handleKeyDown(event) {
 }
 
 function submit() {
-  console.log(input.value);
+  chatStore.addChat(input.value);
+  // console.log(chatStore);
 }
 
 //
@@ -49,17 +52,20 @@ watch(input, (n) => {
           data-lexical-editor="true"
           @keydown="handleKeyDown"
           @keyup="handleChange"
+          @keydown.enter.prevent
           ref="iput"
         ></p>
         <p v-if="textShow" :class="$style.text">Tin nhắn</p>
       </div>
       <div :class="$style.actions">
-        <button>
-          <v-icon name="fa-regular-smile" />
+        <button :class="$style.btn">
+          <v-icon name="fa-regular-smile" :class="$style.icon" />
         </button>
       </div>
     </div>
-    <button>send</button>
+    <button :class="$style.sendBtn">
+      <v-icon name="io-send" :class="$style.icon" />
+    </button>
   </div>
 </template>
 <style lang="scss" module>
@@ -73,7 +79,7 @@ watch(input, (n) => {
     // height: 40px;
     background: #fff;
     display: flex;
-    align-items: center;
+    // align-items: center;
     flex-wrap: wrap;
     justify-content: space-between;
     // flex-direction: row-reverse;
@@ -111,8 +117,32 @@ watch(input, (n) => {
     // text-align: right;
 
     .actions {
-      //   text-align: right;
-      //   width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+
+      .btn {
+        border: 0;
+        background: none;
+        .icon {
+          width: 28px;
+          height: 28px;
+          color: #888;
+        }
+      }
+    }
+  }
+
+  .sendBtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50em;
+    border: 0;
+    color: #888;
+    margin-left: 10px;
+    .icon {
+      width: 30px;
+      height: 30px;
     }
   }
 }

@@ -4,10 +4,10 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import { OhVueIcon, addIcons } from "oh-vue-icons";
-import { BiChevronDown, IoSettingsSharp, IoChatbubbleEllipsesOutline, LaUserFriendsSolid, RiSearch2Line, FaRegularSmile, MdRemoveredeye, FaRegularEyeSlash, FcGoogle, FaFacebook, HiLogout } from "oh-vue-icons/icons";
+import { BiChevronDown, IoSettingsSharp, IoChatbubbleEllipsesOutline, LaUserFriendsSolid, RiSearch2Line, FaRegularSmile, MdRemoveredeye, FaRegularEyeSlash, FcGoogle, FaFacebook, HiLogout, IoSend, BiCheckAll } from "oh-vue-icons/icons";
 
 const app = createApp(App)
-addIcons(BiChevronDown, IoSettingsSharp, IoChatbubbleEllipsesOutline, LaUserFriendsSolid, RiSearch2Line, FaRegularSmile, MdRemoveredeye, FaRegularEyeSlash, FcGoogle, FaFacebook, HiLogout)
+addIcons(BiChevronDown, IoSettingsSharp, IoChatbubbleEllipsesOutline, LaUserFriendsSolid, RiSearch2Line, FaRegularSmile, MdRemoveredeye, FaRegularEyeSlash, FcGoogle, FaFacebook, HiLogout, IoSend, BiCheckAll)
 
 app.use(createPinia())
 app.use(router)

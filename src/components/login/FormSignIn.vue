@@ -1,12 +1,34 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, reactive } from "vue";
+import {
+  auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "../../firebase/config";
+//
 
 const passwordHide = ref(false);
 const type = computed(() => {
-  return passwordHide.value ? "password" : "text";
+  return passwordHide.value ? "text" : "password";
 });
+const dataFrom = reactive({ email: "", password: "" });
 
 // methods
+
+function submitLogin() {
+  // console.log(dataFrom);
+  signInWithEmailAndPassword(auth, dataFrom.email, dataFrom.password)
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+    });
+}
 
 function changePasswordHide() {
   passwordHide.value = !passwordHide.value;
@@ -19,12 +41,18 @@ function changePasswordHide() {
     <div :class="$style.inputBox">
       <input
         :class="$style.input"
-        type="text"
-        placeholder="Email hoặc số điện thoại"
+        type="email"
+        placeholder="Email"
+        v-model="dataFrom.email"
       />
     </div>
     <div :class="$style.inputBox">
-      <input :class="$style.input" :type="type" placeholder="Mật khẩu" />
+      <input
+        :class="$style.input"
+        :type="type"
+        placeholder="Mật khẩu"
+        v-model="dataFrom.password"
+      />
       <button
         @click="changePasswordHide"
         v-if="passwordHide"
@@ -41,7 +69,7 @@ function changePasswordHide() {
         Quên mật khẩu
       </router-link>
     </div>
-    <button :class="$style.btnSubmit">Đăng nhập</button>
+    <button :class="$style.btnSubmit" @click="submitLogin">Đăng nhập</button>
   </form>
 </template>
 
