@@ -3,18 +3,18 @@ import { defineStore } from "pinia";
 export const useUserStore = defineStore({
   id: "user",
   state: () => ({
-    userinfo: { dad: "ll" },
+    userinfo: {},
   }),
   getters: {
     getUserinfo: (state) => state.userinfo,
   },
   actions: {
-    setUserInfo(value) {
-      // console.log(value);
+    setUserInfo(data) {
+      // console.log(data);
       this.userinfo = {
-        username: value.displayName,
-        photo: value.photoURL,
-        uid: value.uid,
+        username: data.displayName,
+        photo: data.photoURL,
+        uid: data.uid,
       };
     },
   },

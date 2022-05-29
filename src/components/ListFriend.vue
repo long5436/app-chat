@@ -1,31 +1,38 @@
 <script setup>
-import av2 from "@/assets/img/av2.jpg";
-import { watchEffect, reactive } from "vue";
-import {
-  db,
-  onSnapshot,
-  getDocs,
-  collection,
-  query,
-  where,
-} from "@/firebase/config";
+import av2 from "@/assets/img/user.webp";
+import { watchEffect, reactive, computed } from "vue";
 import { useUserStore } from "../stores/user";
+import { getUser } from "@/firebase/services";
+// import {
+//   db,
+//   onSnapshot,
+//   getDocs,
+//   collection,
+//   query,
+//   where,
+// } from "@/firebase/config";
 //
 const data = reactive({ users: [] });
+const friends = reactive({ data: [] });
 const userStore = useUserStore();
+const uid = userStore.userinfo.uid;
 
-watchEffect(async () => {
-  const collectionRef = collection(db, "users");
-  const uid = userStore.getUserinfo.uid;
-  //   if (uid) {
-  //   }
-  const q = query(collectionRef, where("uid", "==", uid));
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
+async function getUserFriends() {
+  watchEffect(async () => {
+    const user = await getUser("users", uid);
+    console.log(user);
+    friends.data = user.friends;
   });
-});
+}
+
+getUserFriends();
+console.log(friends.data);
+
+function handleClickFriend(user) {
+  console.log(user);
+}
+
+//
 </script>
 
 <template>
@@ -36,15 +43,20 @@ watchEffect(async () => {
   </div>
   <div :class="$style.listFirend">
     <div
-      v-for="i in 20"
+      v-for="i in friends.data"
       :key="i.index"
       :class="[$style.item, { [$style.itemActive]: i === 2 }]"
+      @click="handleClickFriend(i)"
     >
       <div :class="$style.avt">
-        <img :src="av2" alt="" :class="$style.avtImg" />
+        <img
+          :src="i.photoURL ? i.photoURL : av2"
+          alt=""
+          :class="$style.avtImg"
+        />
       </div>
       <div :class="$style.content">
-        <h3>Joana Martina</h3>
+        <h3>{{ i.displayName }}</h3>
       </div>
     </div>
   </div>
@@ -95,6 +107,7 @@ watchEffect(async () => {
     align-items: center;
     height: 80px;
     padding: 0 20px;
+    cursor: pointer;
 
     .avt {
       width: 50px;
@@ -134,7 +147,7 @@ watchEffect(async () => {
       }
     }
   }
-
+  .item:hover,
   .itemActive {
     position: relative;
     background: #fff;

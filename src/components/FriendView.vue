@@ -1,18 +1,9 @@
 <script setup>
 import avt from "@/assets/img/av2.jpg";
 import { watchEffect, reactive } from "vue";
-import {
-  db,
-  onSnapshot,
-  collection,
-  setDoc,
-  getDocs,
-  doc,
-  updateDoc,
-  query,
-  where,
-} from "@/firebase/config";
+import { db, onSnapshot, collection, doc } from "@/firebase/config";
 import { useUserStore } from "@/stores/user";
+import { addFiend } from "@/firebase/services";
 
 //
 const userStore = useUserStore();
@@ -37,19 +28,10 @@ async function handleAddfriend(user) {
     uid: user.uid,
   };
 
-  const collectionRef = collection(db, "users");
-  const q = query(collectionRef, where("uid", "==", userStore.userinfo.uid));
-  const querySnapshot = await getDocs(q);
+  const uid = userStore.userinfo.uid;
 
-  // querySnapshot.forEach((doc) => {
-  //   // doc.data() is never undefined for query doc snapshots
-  //   updateDoc(doc, {
-  //     friends: ["blabla"],
-  //   });
-  // });
-  // const docRef = doc(db, "users", "friends");
-  // console.log(docRef);
-  // updateDoc(docRef, newFriend);
+  // add friend to current user
+  addFiend("users", uid, newFriend);
 }
 </script>
 

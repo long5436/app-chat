@@ -16,19 +16,19 @@ const getUser = computed(() => {
   return userStore.getUserinfo;
 });
 
-watch(getUser, (n) => {
-  console.log(n);
-});
+// watch(getUser, (n) => {
+//   console.log(n);
+// });
 
-watchEffect(() => {
-  const d = onSnapshot(collection(db, "users"), (snapshot) => {
-    const data = snapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-    console.log({ data, snapshot, docs: snapshot.docs });
-  });
-});
+// watchEffect(() => {
+//   const d = onSnapshot(collection(db, "users"), (snapshot) => {
+//     const data = snapshot.docs.map((doc) => ({
+//       ...doc.data(),
+//       id: doc.id,
+//     }));
+//     console.log({ data, snapshot, docs: snapshot.docs });
+//   });
+// });
 
 // methods
 function logout() {
