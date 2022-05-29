@@ -1,5 +1,31 @@
 <script setup>
 import av2 from "@/assets/img/av2.jpg";
+import { watchEffect, reactive } from "vue";
+import {
+  db,
+  onSnapshot,
+  getDocs,
+  collection,
+  query,
+  where,
+} from "@/firebase/config";
+import { useUserStore } from "../stores/user";
+//
+const data = reactive({ users: [] });
+const userStore = useUserStore();
+
+watchEffect(async () => {
+  const collectionRef = collection(db, "users");
+  const uid = userStore.getUserinfo.uid;
+  //   if (uid) {
+  //   }
+  const q = query(collectionRef, where("uid", "==", uid));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    console.log(doc.id, " => ", doc.data());
+  });
+});
 </script>
 
 <template>
@@ -7,12 +33,8 @@ import av2 from "@/assets/img/av2.jpg";
     <button :class="[$style.btn, $style.btnActive]">
       <span> Tất cả </span>
     </button>
-    <button :class="$style.btn">
-      <span> Chưa đọc </span>
-      <span :class="$style.noti"> 23 </span>
-    </button>
   </div>
-  <div :class="$style.listMessages">
+  <div :class="$style.listFirend">
     <div
       v-for="i in 20"
       :key="i.index"
@@ -23,11 +45,6 @@ import av2 from "@/assets/img/av2.jpg";
       </div>
       <div :class="$style.content">
         <h3>Joana Martina</h3>
-        <p :class="$style.message">I love you so I love you so I love you so</p>
-      </div>
-      <div :class="$style.info">
-        <span>23:33</span>
-        <span :class="$style.noti"> 12 </span>
       </div>
     </div>
   </div>
@@ -70,7 +87,7 @@ import av2 from "@/assets/img/av2.jpg";
   }
 }
 
-.listMessages {
+.listFirend {
   overflow: auto;
   .item {
     display: flex;

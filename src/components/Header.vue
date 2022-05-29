@@ -1,11 +1,14 @@
 <script setup>
 import avatarImg from "@/assets/img/avatar.jpg";
 import { useUserStore } from "../stores/user";
-import { reactive, ref, computed, watch } from "vue";
-import { auth, signOut } from "../firebase/config";
+import { useAppStore } from "../stores/app";
+import { reactive, ref, computed, watch, watchEffect } from "vue";
+import { auth, signOut, db, collection, onSnapshot } from "../firebase/config";
+import userImg from "@/assets/img/user.webp";
 
 //
 const userStore = useUserStore();
+const appStore = useAppStore();
 const userInf = reactive({});
 
 //
@@ -17,11 +20,25 @@ watch(getUser, (n) => {
   console.log(n);
 });
 
+watchEffect(() => {
+  const d = onSnapshot(collection(db, "users"), (snapshot) => {
+    const data = snapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    console.log({ data, snapshot, docs: snapshot.docs });
+  });
+});
+
 // methods
 function logout() {
   // console.log(auth);
   signOut(auth);
   // console.log(signOut);
+}
+
+function changePage() {
+  appStore.changePage();
 }
 </script>
 
@@ -29,17 +46,29 @@ function logout() {
   <header :class="$style.header">
     <div :class="$style.wrapper">
       <div :class="$style.avatar">
-        <img :class="$style.img" :src="getUser.photo" alt="" />
-        <span :class="$style.name">{{ getUser.username }}</span>
+        <img
+          :class="$style.img"
+          :src="getUser.photo ? getUser.photo : userImg"
+          alt=""
+        />
+        <span :class="$style.name">{{
+          getUser.username ? getUser.username : "username"
+        }}</span>
         <v-icon name="bi-chevron-down" :class="$style.icon" />
       </div>
       <div>
-        <button :class="[$style.btn, $style.btnActive]">
+        <button
+          :class="[$style.btn, { [$style.btnActive]: !appStore.getPageFriend }]"
+          @click="changePage"
+        >
           <v-icon name="io-chatbubble-ellipses-outline" :class="$style.icon" />
           <span>Tin nhắn</span>
           <span :class="$style.noti">6</span>
         </button>
-        <button :class="$style.btn">
+        <button
+          :class="[$style.btn, { [$style.btnActive]: appStore.getPageFriend }]"
+          @click="changePage"
+        >
           <v-icon name="la-user-friends-solid" :class="$style.icon" />
           <span>Bạn bè</span>
         </button>

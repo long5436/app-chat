@@ -21,26 +21,19 @@ const router = useRouter();
 
 // methods
 
-function signInWithGoogle() {
-  signInWithPopup(auth, googleProvider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // ...
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
+async function signInWithGoogle() {
+  const { _tokenResponse, user } = await signInWithPopup(auth, googleProvider);
+  if (_tokenResponse?.isNewUser) {
+    // const usersCollectionRef = collection(db, "users");
+    addDocument("users", {
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      uid: user.uid,
+      providerId: _tokenResponse.providerId,
+      friends: [],
     });
+  }
 }
 
 async function signInWithFacebook() {
@@ -49,7 +42,7 @@ async function signInWithFacebook() {
     facebookProvider
   );
   // const a = await signInWithPopup(auth, facebookProvider);
-  // console.log(a);
+  // console.log(_tokenResponse);
 
   if (_tokenResponse?.isNewUser) {
     // const usersCollectionRef = collection(db, "users");
@@ -59,6 +52,7 @@ async function signInWithFacebook() {
       photoURL: user.photoURL,
       uid: user.uid,
       providerId: _tokenResponse.providerId,
+      friends: [],
     });
   }
 
