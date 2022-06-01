@@ -2,34 +2,25 @@
 import av2 from "@/assets/img/user.webp";
 import { watchEffect, reactive, computed } from "vue";
 import { useUserStore } from "../stores/user";
-import { getUser } from "@/firebase/services";
-// import {
-//   db,
-//   onSnapshot,
-//   getDocs,
-//   collection,
-//   query,
-//   where,
-// } from "@/firebase/config";
+import { useAppStore } from "@/stores/app";
+import { addDocument, getUser } from "@/firebase/services";
+
 //
-const data = reactive({ users: [] });
-const friends = reactive({ data: [] });
-const userStore = useUserStore();
-const uid = userStore.userinfo.uid;
+const appStore = useAppStore();
+const friends = computed(() => appStore.getListFriend);
 
-async function getUserFriends() {
-  watchEffect(async () => {
-    const user = await getUser("users", uid);
-    console.log(user);
-    friends.data = user.friends;
-  });
-}
-
-getUserFriends();
-console.log(friends.data);
-
-function handleClickFriend(user) {
-  console.log(user);
+async function handleClickFriend(user) {
+  // console.log(user);
+  const chat = await getUser("chats", userInfo.uid, user.uid);
+  // console.log(chatUser);
+  if (!chat.uid) {
+    addDocument("chats", {
+      id: userInfo.uid + user.uid,
+      name: "",
+      chatData: [],
+      members: [userInfo.uid, user.uid],
+    });
+  }
 }
 
 //
@@ -43,7 +34,7 @@ function handleClickFriend(user) {
   </div>
   <div :class="$style.listFirend">
     <div
-      v-for="i in friends.data"
+      v-for="i in friends"
       :key="i.index"
       :class="[$style.item, { [$style.itemActive]: i === 2 }]"
       @click="handleClickFriend(i)"

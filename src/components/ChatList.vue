@@ -1,5 +1,35 @@
 <script setup>
 import av2 from "@/assets/img/av2.jpg";
+import { useUserStore } from "@/stores/user";
+import { useChatStore } from "@/stores/chat";
+import { getChatLists, getUser } from "@/firebase/services";
+import { watchSyncEffect, watchEffect, reactive, watch, computed } from "vue";
+
+//
+const userStore = useUserStore();
+const chatStore = useChatStore();
+const chatList = computed(() => chatStore.getChatList);
+
+// methods
+
+// function getUserFriends(members) {
+//   console.log(members);
+//   const dataUsers = {};
+//   if (members) {
+//     members.map(async (item) => {
+//       const friendInfo = await getUser("users", item.uid);
+//       const index = item.index;
+//       // console.log(index);
+//       dataUsers[index] = friendInfo;
+//     });
+//   }
+//   // console.log(dataUsers);
+//   return dataUsers;
+// }
+
+watch(chatList, (n) => {
+  console.log(chatList.value);
+});
 </script>
 
 <template>
@@ -14,15 +44,15 @@ import av2 from "@/assets/img/av2.jpg";
   </div>
   <div :class="$style.listMessages">
     <div
-      v-for="i in 20"
-      :key="i.index"
+      v-for="(i, index) in chatList"
+      :key="index"
       :class="[$style.item, { [$style.itemActive]: i === 2 }]"
     >
       <div :class="$style.avt">
         <img :src="av2" alt="" :class="$style.avtImg" />
       </div>
       <div :class="$style.content">
-        <h3>Joana Martina</h3>
+        <h3>{{ i.id }}</h3>
         <p :class="$style.message">I love you so I love you so I love you so</p>
       </div>
       <div :class="$style.info">
@@ -118,6 +148,7 @@ import av2 from "@/assets/img/av2.jpg";
     }
   }
 
+  .item:hover,
   .itemActive {
     position: relative;
     background: #fff;

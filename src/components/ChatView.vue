@@ -2,15 +2,35 @@
 import ChatMessageLeft from "./ChatMessageLeft.vue";
 import ChatMessageRight from "./ChatMessageRight.vue";
 import { useChatStore } from "@/stores/chat";
-import { reactive, computed, watch, getCurrentInstance, onMounted } from "vue";
+import { useUserStore } from "@/stores/user";
+import {
+  reactive,
+  computed,
+  watch,
+  getCurrentInstance,
+  onMounted,
+  watchEffect,
+  watchSyncEffect,
+} from "vue";
+import {
+  db,
+  collection,
+  doc,
+  setDoc,
+  query,
+  where,
+  getDocs,
+} from "@/firebase/config";
 
 //
 const { proxy } = getCurrentInstance();
 const chatStore = useChatStore();
+const userStore = useUserStore();
 const dChat = reactive({ data: [] });
 const chats = computed(() => {
   return chatStore.getChats;
 });
+const user = userStore.userinfo;
 
 dChat.data = chats;
 
@@ -37,6 +57,16 @@ onMounted(() => {
 
 watch(dChat, (n) => {
   scrollBottom();
+});
+
+watchSyncEffect(async () => {
+  const collectionRef = collection(db, "chats");
+  const q = query(collectionRef, where("uid", "==", user.uid));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach(async (document) => {
+    console.log(document.data());
+  });
 });
 </script>
 <template>

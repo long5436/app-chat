@@ -28,10 +28,10 @@ async function handleAddfriend(user) {
     uid: user.uid,
   };
 
-  const uid = userStore.userinfo.uid;
+  const currentUser = userStore.userinfo;
 
   // add friend to current user
-  addFiend("users", uid, newFriend);
+  addFiend("users", currentUser, newFriend);
 }
 </script>
 

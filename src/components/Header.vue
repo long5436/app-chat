@@ -2,6 +2,7 @@
 import avatarImg from "@/assets/img/avatar.jpg";
 import { useUserStore } from "../stores/user";
 import { useAppStore } from "../stores/app";
+import { useRouter } from "vue-router";
 import { reactive, ref, computed, watch, watchEffect } from "vue";
 import { auth, signOut, db, collection, onSnapshot } from "../firebase/config";
 import userImg from "@/assets/img/user.webp";
@@ -9,6 +10,7 @@ import userImg from "@/assets/img/user.webp";
 //
 const userStore = useUserStore();
 const appStore = useAppStore();
+const router = useRouter();
 const userInf = reactive({});
 
 //
@@ -37,8 +39,13 @@ function logout() {
   // console.log(signOut);
 }
 
-function changePage() {
+function changePage(value) {
   appStore.changePage();
+  if (value == "f") {
+    router.push({ path: "/friends" });
+  } else {
+    router.push({ path: "/" });
+  }
 }
 </script>
 
@@ -67,7 +74,7 @@ function changePage() {
         </button>
         <button
           :class="[$style.btn, { [$style.btnActive]: appStore.getPageFriend }]"
-          @click="changePage"
+          @click="changePage('f')"
         >
           <v-icon name="la-user-friends-solid" :class="$style.icon" />
           <span>Bạn bè</span>

@@ -1,13 +1,13 @@
 <script setup>
 import DesktopLayout from "@/components/layout/Desktop.vue";
-import Sidebar from "../components/Sidebar.vue";
-import ChatMain from "../components/ChatMain.vue";
-import FriendSideBar from "../components/FriendSideBar.vue";
-import FriendMain from "../components/FriendMain.vue";
+import Sidebar from "@/components/Sidebar.vue";
+import ChatMain from "@/components/ChatMain.vue";
+import FriendSideBar from "@/components/FriendSideBar.vue";
+import FriendMain from "@/components/FriendMain.vue";
 import AppProvider from "@/service/appProvider.vue";
 import { auth, onAuthStateChanged } from "@/firebase/config";
 import { useRouter } from "vue-router";
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "@/stores/user";
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -26,10 +26,10 @@ onAuthStateChanged(auth, (user) => {
   <AppProvider>
     <DesktopLayout>
       <template #sidebar>
-        <Sidebar />
+        <FriendSideBar />
       </template>
       <template #body>
-        <ChatMain />
+        <FriendMain />
       </template>
     </DesktopLayout>
   </AppProvider>
