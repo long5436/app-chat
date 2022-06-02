@@ -4,6 +4,7 @@ import { useUserStore } from "@/stores/user";
 import { useChatStore } from "@/stores/chat";
 import { getChatLists, getUser } from "@/firebase/services";
 import { watchSyncEffect, watchEffect, reactive, watch, computed } from "vue";
+import createAvtString from "@/plugins/createAvtString";
 
 //
 const userStore = useUserStore();
@@ -11,25 +12,6 @@ const chatStore = useChatStore();
 const chatList = computed(() => chatStore.getChatList);
 
 // methods
-
-// function getUserFriends(members) {
-//   console.log(members);
-//   const dataUsers = {};
-//   if (members) {
-//     members.map(async (item) => {
-//       const friendInfo = await getUser("users", item.uid);
-//       const index = item.index;
-//       // console.log(index);
-//       dataUsers[index] = friendInfo;
-//     });
-//   }
-//   // console.log(dataUsers);
-//   return dataUsers;
-// }
-
-watch(chatList, (n) => {
-  console.log(chatList.value);
-});
 </script>
 
 <template>
@@ -49,10 +31,18 @@ watch(chatList, (n) => {
       :class="[$style.item, { [$style.itemActive]: i === 2 }]"
     >
       <div :class="$style.avt">
-        <img :src="av2" alt="" :class="$style.avtImg" />
+        <img
+          v-if="i.friendInfo.photoURL"
+          :src="i.friendInfo.photoURL || av2"
+          alt=""
+          :class="$style.avtImg"
+        />
+        <div v-else :class="$style.avtText">
+          <span>{{ createAvtString(i.friendInfo.displayName) }} </span>
+        </div>
       </div>
       <div :class="$style.content">
-        <h3>{{ i.id }}</h3>
+        <h3>{{ i.friendInfo.displayName }}</h3>
         <p :class="$style.message">I love you so I love you so I love you so</p>
       </div>
       <div :class="$style.info">
@@ -117,6 +107,20 @@ watch(chatList, (n) => {
         border-radius: 50em;
         width: inherit;
         height: inherit;
+      }
+
+      .avtText {
+        display: inline-flex;
+        // justify-content: ce;
+        background: #ddd;
+        border-radius: 50em;
+        width: inherit;
+        height: inherit;
+
+        span {
+          margin: auto;
+          font-size: 1.3rem;
+        }
       }
     }
 

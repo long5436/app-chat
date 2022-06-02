@@ -6,6 +6,7 @@ import { useRouter } from "vue-router";
 import { reactive, ref, computed, watch, watchEffect } from "vue";
 import { auth, signOut, db, collection, onSnapshot } from "../firebase/config";
 import userImg from "@/assets/img/user.webp";
+import createAvtString from "@/plugins/createAvtString";
 
 //
 const userStore = useUserStore();
@@ -54,10 +55,14 @@ function changePage(value) {
     <div :class="$style.wrapper">
       <div :class="$style.avatar">
         <img
+          v-if="getUser.photoURL"
           :class="$style.img"
           :src="getUser.photo ? getUser.photo : userImg"
           alt=""
         />
+        <div v-else :class="$style.avtText">
+          <span>{{ createAvtString(getUser.username) }} </span>
+        </div>
         <span :class="$style.name">{{
           getUser.username ? getUser.username : "username"
         }}</span>
@@ -111,10 +116,27 @@ function changePage(value) {
     display: flex;
     align-items: centers;
     height: 30px;
+    width: 30px;
     .img {
       width: 30px;
       height: 30px;
       border-radius: 50em;
+    }
+
+    .avtText {
+      display: flex;
+      background: #ddd;
+      border-radius: 50em;
+      width: 30px;
+      height: 30px;
+
+      span {
+        line-height: 30px;
+        font-size: 1rem;
+        width: 30px;
+        text-align: center;
+        height: 30px;
+      }
     }
 
     .name {

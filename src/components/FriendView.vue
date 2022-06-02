@@ -4,6 +4,7 @@ import { watchEffect, reactive } from "vue";
 import { db, onSnapshot, collection, doc } from "@/firebase/config";
 import { useUserStore } from "@/stores/user";
 import { addFiend } from "@/firebase/services";
+import createAvtString from "@/plugins/createAvtString";
 
 //
 const userStore = useUserStore();
@@ -41,7 +42,15 @@ async function handleAddfriend(user) {
   </div>
   <div :class="$style.list">
     <div :class="$style.item" v-for="i in data.users" :key="i.index">
-      <img :src="i.photoURL ? i.photoURL : avt" alt="" :class="$style.img" />
+      <img
+        v-if="i.photoURL"
+        :src="i.photoURL ? i.photoURL : avt"
+        alt=""
+        :class="$style.img"
+      />
+      <div v-else :class="$style.avtText">
+        <span>{{ createAvtString(i.displayName) }}</span>
+      </div>
       <h3>{{ i.displayName }}</h3>
       <button @click="handleAddfriend(i)">Kết bạn</button>
     </div>
@@ -66,6 +75,18 @@ async function handleAddfriend(user) {
       width: 90px;
       height: 90px;
       border-radius: 50em;
+    }
+
+    .avtText {
+      width: 90px;
+      height: 90px;
+      display: inline-flex;
+      border-radius: 50rem;
+      background: #ddd;
+      span {
+        margin: auto;
+        font-size: 2rem;
+      }
     }
   }
 }

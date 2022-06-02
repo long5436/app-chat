@@ -8,9 +8,13 @@ import AppProvider from "@/service/appProvider.vue";
 import { auth, onAuthStateChanged } from "@/firebase/config";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
+import { useAppStore } from "@/stores/app";
 
 const userStore = useUserStore();
+const appStore = useAppStore();
 const router = useRouter();
+
+appStore.pageFriend = true;
 
 onAuthStateChanged(auth, (user) => {
   // console.log(user);

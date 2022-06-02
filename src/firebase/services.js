@@ -1,3 +1,4 @@
+import { async } from "@firebase/util";
 import {
   db,
   addDoc,
@@ -53,14 +54,12 @@ const getUser = async (collectionName, uid) => {
   const q = query(collectionRef, where("uid", "==", uid));
   const querySnapshot = await getDocs(q);
 
-  const friends = { data: [] };
-  onSnapshot(q, (querySnapshot) => {
-    querySnapshot.forEach(async (document) => {
-      console.log(document.data());
-      friends.data = document.data();
-    });
+  let data = {};
+  querySnapshot.forEach(async (document) => {
+    data = document.data();
   });
-  return friends.data;
+  // console.log(data);
+  return data;
 };
 
 const getChat = async (collectionName, id) => {
@@ -101,7 +100,8 @@ const getChatLists = async (collectionName, currentUserUid) => {
   onSnapshot(q, (querySnapshot) => {
     querySnapshot.forEach(async (document) => {
       data.push(document.data());
-      console.log(document);
+      console.log(document.data());
+      return document.data();
     });
   });
 

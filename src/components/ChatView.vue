@@ -59,15 +59,15 @@ watch(dChat, (n) => {
   scrollBottom();
 });
 
-watchSyncEffect(async () => {
-  const collectionRef = collection(db, "chats");
-  const q = query(collectionRef, where("uid", "==", user.uid));
-  const querySnapshot = await getDocs(q);
+// watchSyncEffect(async () => {
+//   const collectionRef = collection(db, "chats");
+//   const q = query(collectionRef, where("uid", "==", user.uid));
+//   const querySnapshot = await getDocs(q);
 
-  querySnapshot.forEach(async (document) => {
-    console.log(document.data());
-  });
-});
+//   querySnapshot.forEach(async (document) => {
+//     console.log(document.data());
+//   });
+// });
 </script>
 <template>
   <div :class="$style.chatView" ref="chatMain">

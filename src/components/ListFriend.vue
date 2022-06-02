@@ -4,9 +4,12 @@ import { watchEffect, reactive, computed } from "vue";
 import { useUserStore } from "../stores/user";
 import { useAppStore } from "@/stores/app";
 import { addDocument, getUser } from "@/firebase/services";
+import createAvtString from "@/plugins/createAvtString";
 
 //
 const appStore = useAppStore();
+const userStore = useUserStore();
+const userInfo = userStore.userinfo;
 const friends = computed(() => appStore.getListFriend);
 
 async function handleClickFriend(user) {
@@ -41,10 +44,14 @@ async function handleClickFriend(user) {
     >
       <div :class="$style.avt">
         <img
-          :src="i.photoURL ? i.photoURL : av2"
+          v-if="i.photoURL"
+          :src="i.photoURL || av2"
           alt=""
           :class="$style.avtImg"
         />
+        <div v-else :class="$style.avtText">
+          <span>{{ createAvtString(i.displayName) }} </span>
+        </div>
       </div>
       <div :class="$style.content">
         <h3>{{ i.displayName }}</h3>
@@ -108,6 +115,19 @@ async function handleClickFriend(user) {
         border-radius: 50em;
         width: inherit;
         height: inherit;
+      }
+      .avtText {
+        display: inline-flex;
+        // justify-content: ce;
+        background: #ddd;
+        border-radius: 50em;
+        width: inherit;
+        height: inherit;
+
+        span {
+          margin: auto;
+          font-size: 1.3rem;
+        }
       }
     }
 
