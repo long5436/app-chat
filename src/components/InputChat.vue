@@ -1,9 +1,14 @@
 <script setup>
 import { ref, getCurrentInstance, watch } from "vue";
 import { useChatStore } from "@/stores/chat";
+import { useUserStore } from "@/stores/user";
+import { sendMessage } from "@/firebase/services";
 
 //
 const chatStore = useChatStore();
+const userStore = useUserStore();
+const userInfo = userStore.userinfo;
+const currentChatId = chatStore.currentChatId;
 const { proxy } = getCurrentInstance();
 const input = ref("");
 const textShow = ref("true");
@@ -25,8 +30,16 @@ function handleKeyDown(event) {
 }
 
 function submit() {
-  chatStore.addChat(input.value);
+  // console.log(input.value);
+  // chatStore.addChat(input.value);
   // console.log(chatStore);
+  sendMessage("chats", currentChatId, {
+    displayName: userInfo.username,
+    photoURL: userInfo.photo,
+    uid: userInfo.uid,
+    content: input.value,
+    createdAt: new Date(),
+  });
 }
 
 //

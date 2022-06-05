@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "firebase": "^9.8.1",
+    "moment": "^2.29.3",
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^2.0.13",
     "sass": "^1.52.1",

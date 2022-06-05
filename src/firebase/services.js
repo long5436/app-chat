@@ -108,4 +108,22 @@ const getChatLists = async (collectionName, currentUserUid) => {
   return data;
 };
 
-export { addDocument, addFiend, getUser, getChat, getChatLists };
+const sendMessage = async (collectionName, currentChatId, message) => {
+  console.log(currentChatId, message);
+
+  const add = async (document, data) => {
+    const documentRef = doc(db, collectionName, document.id);
+    await updateDoc(documentRef, { chatData: arrayUnion(data) });
+  };
+
+  const collectionRef = collection(db, collectionName);
+  const q = query(collectionRef, where("id", "==", currentChatId));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach(async (document) => {
+    console.log(document.data());
+    add(document, message);
+  });
+};
+
+export { addDocument, addFiend, getUser, getChat, getChatLists, sendMessage };

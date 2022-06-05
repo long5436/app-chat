@@ -1,5 +1,6 @@
 <script setup>
 import avt from "@/assets/img/av2.jpg";
+import createAvtString from "@/plugins/createAvtString";
 //
 const props = defineProps(["data"]);
 </script>
@@ -7,7 +8,16 @@ const props = defineProps(["data"]);
 <template>
   <div :class="$style.msg">
     <div :class="$style.avt">
-      <img :src="avt" alt="" />
+      <img v-if="data?.photoURL" :src="avt" alt="" />
+      <div
+        v-else
+        :class="$style.avtName"
+        :style="{ background: createAvtString(data?.displayName).color }"
+      >
+        <span>
+          {{ createAvtString(data?.displayName).name }}
+        </span>
+      </div>
     </div>
     <div :class="$style.content">
       <div :class="$style.text">
@@ -31,6 +41,18 @@ const props = defineProps(["data"]);
       width: 30px;
       height: 30px;
       border-radius: 50em;
+    }
+
+    .avtName {
+      display: flex;
+      width: 30px;
+      height: 30px;
+      border-radius: 50em;
+
+      span {
+        margin: auto;
+        font-size: 1.2rem;
+      }
     }
   }
   .content {

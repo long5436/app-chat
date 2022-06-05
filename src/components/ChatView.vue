@@ -12,15 +12,15 @@ import {
   watchEffect,
   watchSyncEffect,
 } from "vue";
-import {
-  db,
-  collection,
-  doc,
-  setDoc,
-  query,
-  where,
-  getDocs,
-} from "@/firebase/config";
+// import {
+//   db,
+//   collection,
+//   doc,
+//   setDoc,
+//   query,
+//   where,
+//   getDocs,
+// } from "@/firebase/config";
 
 //
 const { proxy } = getCurrentInstance();
@@ -28,13 +28,14 @@ const chatStore = useChatStore();
 const userStore = useUserStore();
 const dChat = reactive({ data: [] });
 const chats = computed(() => {
+  console.log(chatStore.getChats);
   return chatStore.getChats;
 });
 const user = userStore.userinfo;
 // const props = defineProps(["data"]);
 // const chatData = computed(() => props.data);
 // const chatMessage = reactive
-dChat.data = chats;
+// dChat.data = chats;
 
 function scrollBottom() {
   const element = proxy.$refs.chatMain;
@@ -60,12 +61,17 @@ onMounted(() => {
 watch(dChat, (n) => {
   scrollBottom();
 });
+
+//
+watch(chats, (n) => {
+  console.log(n);
+});
 </script>
 <template>
   <div :class="$style.chatView" ref="chatMain">
     <template v-for="item in chats" :key="item.index">
-      <ChatMessageLeft v-if="item.user === 2" :data="item" />
-      <ChatMessageRight v-else :data="item" />
+      <ChatMessageRight v-if="item.uid === user.uid" :data="item" />
+      <ChatMessageLeft v-else :data="item" />
     </template>
   </div>
 </template>

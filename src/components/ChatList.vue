@@ -14,8 +14,11 @@ const chatList = computed(() => chatStore.getChatList);
 // methods
 
 function handleClick(data) {
-  console.log(data);
-  chatStore.addCurrentChatUser(data.friendInfo);
+  // console.log(data);
+  // console.log(data.chatData);
+  console.log(chatStore);
+  chatStore.addChatData(data.chatData);
+  chatStore.addCurrentChatUser(data);
 }
 </script>
 

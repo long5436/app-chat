@@ -14,7 +14,7 @@ console.log(currentChatUser.value);
 
 watch(currentChatUser, (n) => {
   console.log(n);
-  chatStore.addChats(n.chatData);
+  // chatStore.addChats(n.chatData);
 });
 </script>
 
