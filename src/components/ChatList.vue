@@ -12,6 +12,11 @@ const chatStore = useChatStore();
 const chatList = computed(() => chatStore.getChatList);
 
 // methods
+
+function handleClick(data) {
+  console.log(data);
+  chatStore.addCurrentChatUser(data.friendInfo);
+}
 </script>
 
 <template>
@@ -29,20 +34,27 @@ const chatList = computed(() => chatStore.getChatList);
       v-for="(i, index) in chatList"
       :key="index"
       :class="[$style.item, { [$style.itemActive]: i === 2 }]"
+      @click="handleClick(i)"
     >
       <div :class="$style.avt">
         <img
-          v-if="i.friendInfo.photoURL"
+          v-if="i.friendInfo?.photoURL"
           :src="i.friendInfo.photoURL || av2"
           alt=""
           :class="$style.avtImg"
         />
-        <div v-else :class="$style.avtText">
-          <span>{{ createAvtString(i.friendInfo.displayName) }} </span>
+        <div
+          v-else
+          :class="$style.avtText"
+          :style="{
+            background: createAvtString(i.friendInfo?.displayName).color,
+          }"
+        >
+          <span>{{ createAvtString(i.friendInfo?.displayName).name }} </span>
         </div>
       </div>
       <div :class="$style.content">
-        <h3>{{ i.friendInfo.displayName }}</h3>
+        <h3>{{ i.friendInfo?.displayName }}</h3>
         <p :class="$style.message">I love you so I love you so I love you so</p>
       </div>
       <div :class="$style.info">
@@ -156,6 +168,7 @@ const chatList = computed(() => chatStore.getChatList);
   .itemActive {
     position: relative;
     background: #fff;
+    cursor: pointer;
 
     &::before {
       content: "";

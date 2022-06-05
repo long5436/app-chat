@@ -60,8 +60,12 @@ function changePage(value) {
           :src="getUser.photo ? getUser.photo : userImg"
           alt=""
         />
-        <div v-else :class="$style.avtText">
-          <span>{{ createAvtString(getUser.username) }} </span>
+        <div
+          v-else
+          :class="$style.avtText"
+          :style="{ background: createAvtString(getUser.username).color }"
+        >
+          <span>{{ createAvtString(getUser.username).name }} </span>
         </div>
         <span :class="$style.name">{{
           getUser.username ? getUser.username : "username"

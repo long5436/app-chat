@@ -2,6 +2,20 @@
 import avt from "@/assets/img/av2.jpg";
 import InputChatForm from "./InputChat.vue";
 import ChatView from "./ChatView.vue";
+import { watch, computed } from "vue";
+import { useChatStore } from "@/stores/chat";
+import createAvtString from "@/plugins/createAvtString";
+
+//
+const chatStore = useChatStore();
+const currentChatUser = computed(() => chatStore.getCurrentChatUser);
+
+console.log(currentChatUser.value);
+
+watch(currentChatUser, (n) => {
+  console.log(n);
+  chatStore.addChats(n.chatData);
+});
 </script>
 
 <template>
@@ -9,8 +23,23 @@ import ChatView from "./ChatView.vue";
     <div :class="$style.wrapper">
       <div :class="$style.user">
         <div :class="$style.info">
-          <img :src="avt" alt="" :class="$style.avt" />
-          <h2 :class="$style.username">Joana Martina</h2>
+          <img
+            v-if="currentChatUser.photoURL"
+            :src="currentChatUser.photoURL || avt"
+            alt=""
+            :class="$style.avt"
+          />
+          <div
+            :class="$style.avtName"
+            :style="{
+              background: createAvtString(currentChatUser.displayName).color,
+            }"
+          >
+            <span>{{ createAvtString(currentChatUser.displayName).name }}</span>
+          </div>
+          <h2 :class="$style.username">
+            {{ currentChatUser.displayName }}
+          </h2>
         </div>
       </div>
       <div>
@@ -22,13 +51,16 @@ import ChatView from "./ChatView.vue";
   </div>
   <div :class="$style.body">
     <div :class="$style.wrapper">
-      <div :class="$style.content">
+      <div :class="$style.content" v-if="currentChatUser.displayName">
         <div :class="$style.messages">
-          <ChatView />
+          <ChatView :data="currentChatUser" />
         </div>
         <div :class="$style.inputChat">
           <InputChatForm />
         </div>
+      </div>
+      <div :class="$style.content" v-else>
+        <h2>Khong co gi o day</h2>
       </div>
     </div>
   </div>
@@ -56,6 +88,20 @@ import ChatView from "./ChatView.vue";
         height: 50px;
         border-radius: 50em;
         margin-right: 10px;
+      }
+
+      .avtName {
+        display: flex;
+        width: 50px;
+        height: 50px;
+        border-radius: 50em;
+        margin-right: 10px;
+        background: #ddd;
+        span {
+          margin: auto;
+          font-size: 1.6rem;
+          transform: translateY(-1px);
+        }
       }
     }
   }

@@ -62,10 +62,12 @@ export const useChatStore = defineStore({
       },
     ],
     chatList: [],
+    currentChatUser: {},
   }),
   getters: {
     getChats: (state) => state.chats,
     getChatList: (state) => state.chatList,
+    getCurrentChatUser: (state) => state.currentChatUser,
   },
   actions: {
     addChat(value) {
@@ -76,9 +78,17 @@ export const useChatStore = defineStore({
       });
     },
 
+    addChats(data) {
+      this.chats = data;
+    },
+
     addChatList(data) {
-      console.log(data);
+      // console.log(data);
       this.chatList = data;
+    },
+
+    addCurrentChatUser(data) {
+      this.currentChatUser = data;
     },
   },
 });

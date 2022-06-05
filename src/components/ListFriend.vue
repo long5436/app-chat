@@ -49,8 +49,12 @@ async function handleClickFriend(user) {
           alt=""
           :class="$style.avtImg"
         />
-        <div v-else :class="$style.avtText">
-          <span>{{ createAvtString(i.displayName) }} </span>
+        <div
+          v-else
+          :class="$style.avtText"
+          :style="{ background: createAvtString(i.displayName).color }"
+        >
+          <span>{{ createAvtString(i.displayName).name }} </span>
         </div>
       </div>
       <div :class="$style.content">

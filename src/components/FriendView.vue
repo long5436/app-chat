@@ -48,8 +48,12 @@ async function handleAddfriend(user) {
         alt=""
         :class="$style.img"
       />
-      <div v-else :class="$style.avtText">
-        <span>{{ createAvtString(i.displayName) }}</span>
+      <div
+        v-else
+        :class="$style.avtText"
+        :style="{ background: createAvtString(i.displayName).color }"
+      >
+        <span>{{ createAvtString(i.displayName).name }}</span>
       </div>
       <h3>{{ i.displayName }}</h3>
       <button @click="handleAddfriend(i)">Kết bạn</button>

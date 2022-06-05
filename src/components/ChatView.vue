@@ -31,7 +31,9 @@ const chats = computed(() => {
   return chatStore.getChats;
 });
 const user = userStore.userinfo;
-
+// const props = defineProps(["data"]);
+// const chatData = computed(() => props.data);
+// const chatMessage = reactive
 dChat.data = chats;
 
 function scrollBottom() {
@@ -58,16 +60,6 @@ onMounted(() => {
 watch(dChat, (n) => {
   scrollBottom();
 });
-
-// watchSyncEffect(async () => {
-//   const collectionRef = collection(db, "chats");
-//   const q = query(collectionRef, where("uid", "==", user.uid));
-//   const querySnapshot = await getDocs(q);
-
-//   querySnapshot.forEach(async (document) => {
-//     console.log(document.data());
-//   });
-// });
 </script>
 <template>
   <div :class="$style.chatView" ref="chatMain">
