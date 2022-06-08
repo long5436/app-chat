@@ -1,74 +1,23 @@
+import { TwitterAuthProvider } from "firebase/auth";
 import { defineStore } from "pinia";
 import uniqid from "uniqid";
 
 export const useChatStore = defineStore({
   id: "chat",
   state: () => ({
-    chats: [
-      {
-        id: 0,
-        user: 1,
-        content: "Xong chưa các bác ?",
-      },
-      {
-        id: 1,
-        user: 2,
-        content: "Chưa 🤣 đang nghiên cứu",
-      },
-      {
-        id: 2,
-        user: 1,
-        content: "Làm được tới đâu rồi",
-      },
-      {
-        id: 3,
-        user: 2,
-        content: "Sắp xong rồi",
-      },
-      {
-        id: 3,
-        user: 1,
-        content: "Ok tranh thử nhé :v",
-      },
-      {
-        id: 3,
-        user: 1,
-        content: "Test :v",
-      },
-      {
-        id: 3,
-        user: 1,
-        content: "Test :v",
-      },
-      {
-        id: 3,
-        user: 1,
-        content: "Test :v",
-      },
-      {
-        id: 3,
-        user: 1,
-        content: "Test :v",
-      },
-      {
-        id: 3,
-        user: 1,
-        content: "Test :v",
-      },
-      {
-        id: 3,
-        user: 1,
-        content: "Test :v",
-      },
-    ],
+    chatListContent: [],
     chatList: [],
     currentChatUser: {},
     currentChatId: "",
   }),
   getters: {
-    getChats: (state) => state.chats,
+    getChatContent: (state) => (chatId) => {
+      // console.log(chatId);
+      return state.chatListContent.find((chat) => chat.chatId === chatId);
+    },
     getChatList: (state) => state.chatList,
     getCurrentChatUser: (state) => state.currentChatUser,
+    getCurrentChatId: (state) => state.currentChatId,
   },
   actions: {
     addChat(value) {
@@ -81,7 +30,27 @@ export const useChatStore = defineStore({
 
     addChatData(data) {
       // console.log(data);
-      this.chats = data || [];
+      this.chatListContent.push(data);
+    },
+
+    addChatDataContent(data) {
+      // const newMessage = data.chatData.pop();
+      console.log(data);
+
+      if (data) {
+        this.chatListContent.find((chat, index) => {
+          if (chat.chatId === data.chatId) {
+            const bool =
+              data.pop.createdAt.seconds ===
+              chat.chatData[chat.chatData.length - 1]?.createdAt.seconds;
+            // console.log(bool);
+            if (!bool) {
+              chat.chatData.push(data.pop);
+            }
+            return;
+          }
+        });
+      }
     },
 
     addChatList(data) {

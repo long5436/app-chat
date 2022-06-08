@@ -55,7 +55,7 @@ function changePage(value) {
     <div :class="$style.wrapper">
       <div :class="$style.avatar">
         <img
-          v-if="getUser.photoURL"
+          v-if="getUser.photo"
           :class="$style.img"
           :src="getUser.photo ? getUser.photo : userImg"
           alt=""
@@ -70,7 +70,7 @@ function changePage(value) {
         <span :class="$style.name">{{
           getUser.username ? getUser.username : "username"
         }}</span>
-        <v-icon name="bi-chevron-down" :class="$style.icon" />
+        <!-- <v-icon name="bi-chevron-down" :class="$style.icon" /> -->
       </div>
       <div>
         <button
@@ -120,7 +120,7 @@ function changePage(value) {
     display: flex;
     align-items: centers;
     height: 30px;
-    width: 30px;
+    // width: 30px;
     .img {
       width: 30px;
       height: 30px;

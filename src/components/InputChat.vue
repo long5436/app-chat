@@ -1,5 +1,5 @@
 <script setup>
-import { ref, getCurrentInstance, watch } from "vue";
+import { ref, getCurrentInstance, watch, computed } from "vue";
 import { useChatStore } from "@/stores/chat";
 import { useUserStore } from "@/stores/user";
 import { sendMessage } from "@/firebase/services";
@@ -8,7 +8,7 @@ import { sendMessage } from "@/firebase/services";
 const chatStore = useChatStore();
 const userStore = useUserStore();
 const userInfo = userStore.userinfo;
-const currentChatId = chatStore.currentChatId;
+const currentChatId = computed(() => chatStore.getCurrentChatId);
 const { proxy } = getCurrentInstance();
 const input = ref("");
 const textShow = ref("true");
@@ -33,7 +33,7 @@ function submit() {
   // console.log(input.value);
   // chatStore.addChat(input.value);
   // console.log(chatStore);
-  sendMessage("chats", currentChatId, {
+  sendMessage("messages", currentChatId.value, {
     displayName: userInfo.username,
     photoURL: userInfo.photo,
     uid: userInfo.uid,

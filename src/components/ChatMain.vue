@@ -10,12 +10,12 @@ import createAvtString from "@/plugins/createAvtString";
 const chatStore = useChatStore();
 const currentChatUser = computed(() => chatStore.getCurrentChatUser);
 
-console.log(currentChatUser.value);
+// console.log(currentChatUser.value);
 
-watch(currentChatUser, (n) => {
-  console.log(n);
-  // chatStore.addChats(n.chatData);
-});
+// watch(currentChatUser, (n) => {
+//   console.log(n);
+//   // chatStore.addChats(n.chatData);
+// });
 </script>
 
 <template>

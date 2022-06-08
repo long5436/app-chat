@@ -23,11 +23,7 @@ watchEffect(() => {
 
 // methods
 async function handleAddfriend(user) {
-  const newFriend = {
-    displayName: user.displayName,
-    photoURL: user.photoURL,
-    uid: user.uid,
-  };
+  const newFriend = user;
 
   const currentUser = userStore.userinfo;
 

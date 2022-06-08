@@ -11,11 +11,20 @@ import {
   doc,
   updateDoc,
   onSnapshot,
+  increment,
 } from "./config";
 
 const addDocument = async (collectionName, data) => {
-  const docRef = await addDoc(collection(db, collectionName), {
+  console.log(data);
+  addDoc(collection(db, collectionName), {
     ...data,
+    createdAt: serverTimestamp(),
+  });
+
+  addDoc(collection(db, "messages"), {
+    chatId: data.id,
+    name: data.name,
+    chatData: [],
     createdAt: serverTimestamp(),
   });
 };
@@ -49,7 +58,7 @@ const addFiend = async (collectionName, currentUser, newFriend) => {
 };
 
 const getUser = async (collectionName, uid) => {
-  console.log(uid);
+  // console.log(uid);
   const collectionRef = collection(db, collectionName);
   const q = query(collectionRef, where("uid", "==", uid));
   const querySnapshot = await getDocs(q);
@@ -62,21 +71,19 @@ const getUser = async (collectionName, uid) => {
   return data;
 };
 
-const getChat = async (collectionName, id) => {
+const getChat = async (id) => {
   // console.log(uid);
-  const collectionRef = collection(db, collectionName);
-  const q = query(collectionRef, where("id", "==", id));
+  const collectionRef = collection(db, "messages");
+  const q = query(collectionRef, where("chatId", "==", id));
   const querySnapshot = await getDocs(q);
 
-  const friends = { data: [] };
-  onSnapshot(q, (querySnapshot) => {
-    querySnapshot.forEach(async (document) => {
-      // console.log(document.data);
-      friends.data = document.data();
-    });
+  const chats = { data: {} };
+  querySnapshot.forEach(async (document) => {
+    // console.log(document.data);
+    chats.data = document.data();
   });
 
-  return friends.data;
+  return chats.data;
 };
 
 // get add chat list of current user
@@ -113,11 +120,13 @@ const sendMessage = async (collectionName, currentChatId, message) => {
 
   const add = async (document, data) => {
     const documentRef = doc(db, collectionName, document.id);
-    await updateDoc(documentRef, { chatData: arrayUnion(data) });
+    await updateDoc(documentRef, {
+      chatData: arrayUnion(data),
+    });
   };
 
   const collectionRef = collection(db, collectionName);
-  const q = query(collectionRef, where("id", "==", currentChatId));
+  const q = query(collectionRef, where("chatId", "==", currentChatId));
   const querySnapshot = await getDocs(q);
 
   querySnapshot.forEach(async (document) => {

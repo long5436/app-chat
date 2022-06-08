@@ -16,6 +16,7 @@ import {
 import { addDocument } from "@/firebase/services";
 
 import { useRouter } from "vue-router";
+import createColor from "@/plugins/createColor";
 
 const router = useRouter();
 
@@ -32,6 +33,7 @@ async function signInWithGoogle() {
       uid: user.uid,
       providerId: _tokenResponse.providerId,
       friends: [],
+      theme: createColor(),
     });
   }
 }
@@ -53,6 +55,7 @@ async function signInWithFacebook() {
       uid: user.uid,
       providerId: _tokenResponse.providerId,
       friends: [],
+      theme: createColor(),
     });
   }
 }

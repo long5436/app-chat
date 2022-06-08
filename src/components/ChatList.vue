@@ -2,23 +2,37 @@
 import av2 from "@/assets/img/av2.jpg";
 import { useUserStore } from "@/stores/user";
 import { useChatStore } from "@/stores/chat";
-import { getChatLists, getUser } from "@/firebase/services";
-import { watchSyncEffect, watchEffect, reactive, watch, computed } from "vue";
+import { getUser, getChat } from "@/firebase/services";
+import {
+  watchSyncEffect,
+  watchEffect,
+  reactive,
+  ref,
+  watch,
+  computed,
+} from "vue";
 import createAvtString from "@/plugins/createAvtString";
 
 //
 const userStore = useUserStore();
 const chatStore = useChatStore();
 const chatList = computed(() => chatStore.getChatList);
+const currentChatId = ref("");
 
 // methods
 
-function handleClick(data) {
-  // console.log(data);
-  // console.log(data.chatData);
-  console.log(chatStore);
-  chatStore.addChatData(data.chatData);
+async function handleClick(data) {
+  // console.log(data.friendInfo);
+  // console.log(chatStore);
+  if (!chatStore.getChatContent(data.id)) {
+    const chatContentData = await getChat(data.id);
+    // console.log(chatContentData);
+    chatStore.addChatData(chatContentData);
+  }
+  // // console.log(data.chatData);
+  // // chatStore.addChatData(data.chatData);
   chatStore.addCurrentChatUser(data);
+  currentChatId.value = data.friendInfo?.uid;
 }
 </script>
 
@@ -36,7 +50,10 @@ function handleClick(data) {
     <div
       v-for="(i, index) in chatList"
       :key="index"
-      :class="[$style.item, { [$style.itemActive]: i === 2 }]"
+      :class="[
+        $style.item,
+        { [$style.itemActive]: i.friendInfo?.uid === currentChatId },
+      ]"
       @click="handleClick(i)"
     >
       <div :class="$style.avt">
@@ -50,7 +67,8 @@ function handleClick(data) {
           v-else
           :class="$style.avtText"
           :style="{
-            background: createAvtString(i.friendInfo?.displayName).color,
+            background: i.friendInfo?.theme.backgroundColor,
+            color: i.friendInfo?.theme.textColor,
           }"
         >
           <span>{{ createAvtString(i.friendInfo?.displayName).name }} </span>
@@ -108,6 +126,7 @@ function handleClick(data) {
 .listMessages {
   overflow: auto;
   .item {
+    position: relative;
     display: flex;
     border-bottom: 1px solid #ddd;
     align-items: center;

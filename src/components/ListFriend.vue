@@ -9,19 +9,18 @@ import createAvtString from "@/plugins/createAvtString";
 //
 const appStore = useAppStore();
 const userStore = useUserStore();
-const userInfo = userStore.userinfo;
+const userInfo = computed(() => userStore.getUserinfo);
 const friends = computed(() => appStore.getListFriend);
 
 async function handleClickFriend(user) {
+  const chat = await getUser("chats", userInfo.value.uid, user.uid);
   // console.log(user);
-  const chat = await getUser("chats", userInfo.uid, user.uid);
-  // console.log(chatUser);
+  // console.log(chat);
   if (!chat.uid) {
     addDocument("chats", {
-      id: userInfo.uid + user.uid,
+      id: userInfo.value.uid + user.uid,
       name: "",
-      chatData: [],
-      members: [userInfo.uid, user.uid],
+      members: [userInfo.value.uid, user.uid],
     });
   }
 }

@@ -27,10 +27,16 @@ const { proxy } = getCurrentInstance();
 const chatStore = useChatStore();
 const userStore = useUserStore();
 const dChat = reactive({ data: [] });
+const currentChatId = computed(() => chatStore.currentChatId);
+
 const chats = computed(() => {
-  console.log(chatStore.getChats);
-  return chatStore.getChats;
+  // console.log(currentChatId.value);
+  if (chatStore.getChatContent(currentChatId.value)?.chatData) {
+    return chatStore.getChatContent(currentChatId.value).chatData;
+  }
 });
+
+dChat.data = chats.value;
 const user = userStore.userinfo;
 // const props = defineProps(["data"]);
 // const chatData = computed(() => props.data);

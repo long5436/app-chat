@@ -1,6 +1,7 @@
 <script setup>
 import avt from "@/assets/img/av2.jpg";
 import createAvtString from "@/plugins/createAvtString";
+import formatDate from "@/plugins/formatDate";
 //
 const props = defineProps(["data"]);
 </script>
@@ -8,7 +9,7 @@ const props = defineProps(["data"]);
 <template>
   <div :class="$style.msg">
     <div :class="$style.avt">
-      <img v-if="data?.photoURL" :src="avt" alt="" />
+      <img v-if="data?.photoURL" :src="data?.photoURL" alt="" />
       <div
         v-else
         :class="$style.avtName"
@@ -25,7 +26,7 @@ const props = defineProps(["data"]);
       </div>
       <p :class="$style.time">
         <v-icon name="bi-check-all" fill="green" />
-        <span> 12 tháng 3, 2022 </span>
+        <span> {{ formatDate(data.createdAt?.seconds) }} </span>
       </p>
     </div>
   </div>

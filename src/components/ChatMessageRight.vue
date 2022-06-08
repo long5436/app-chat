@@ -18,18 +18,6 @@ const props = defineProps(["data"]);
           <span> {{ formatDate(data.createdAt?.seconds) }} </span>
         </p>
       </div>
-      <div :class="$style.avt">
-        <img v-if="data?.photoURL" :src="avt" alt="" />
-        <div
-          v-else
-          :class="$style.avtName"
-          :style="{ background: createAvtString(data?.displayName).color }"
-        >
-          <span>
-            {{ createAvtString(data?.displayName).name }}
-          </span>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -65,9 +53,22 @@ const props = defineProps(["data"]);
       margin-right: 10px;
 
       .text {
-        background: #ddd;
+        // background: #ddd;
         padding: 8px;
         border-radius: 16px 16px 4px 16px;
+        background-image: linear-gradient(
+          to bottom,
+          #ff2618,
+          #ff5907,
+          #ffa001,
+          #c0c60b,
+          #9fc611,
+          #02b891,
+          #367fe5,
+          #8a39ef
+        );
+        background-attachment: fixed;
+        color: #fff;
 
         p {
           word-break: break-all;

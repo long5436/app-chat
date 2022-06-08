@@ -64,11 +64,7 @@ watchEffect(async () => {
         const uid = user.members.find((mem) => mem !== userInfo.value.uid);
         // console.log(uid);
         const res = await getUser("users", uid);
-        user.friendInfo = {
-          displayName: res.displayName,
-          photoURL: res.photoURL,
-          uid: res.uid,
-        };
+        user.friendInfo = res;
         // console.log(user);
         // console.log(chatList.data);
       });
@@ -113,6 +109,87 @@ async function getUserFriends() {
 getUserFriends();
 // getChatListsUser();
 // console.log(friends.data);
+
+// hard code
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+const currentChatId = computed(() => chatStore.getCurrentChatId);
+// console.log(currentChatId.value);
+
+watchEffect(async () => {
+  const ff = collection(db, "messages");
+  const ee = query(ff, where("chatId", "==", currentChatId.value));
+  const eee = await getDocs(ee);
+
+  let unsubscribe = onSnapshot(ee, (eee) => {
+    watch(currentChatId, (n) => {
+      // console.log("da unsubscribe");
+      unsubscribe();
+    });
+
+    // let mess
+    eee.forEach(async (document) => {
+      // console.log("--------------------------------");
+      // console.log(document.get("chatData")?.pop());
+      const pop = document.get("chatData")?.pop();
+      const chatId = document.get("chatId");
+      // console.log(pop?.createdAt);
+      // console.log(currentChatId.value);
+      // console.log("theo doi tin nhan hard code trong AppProvider");
+      chatStore.addChatDataContent({ chatId, pop });
+      //   friends.data = document.data();
+    });
+  });
+});
+
+//
+async function aa() {
+  const ff = collection(db, "messages");
+  // const ee = query(
+  //   ff,
+  //   where(
+  //     "chatId",
+  //     "==",
+  //     "VaVDswFQ9dijmizj8nalSxyz2E7XSaQo3cs0eHspKRQVhZ0ChWAx7DEc"
+  //   )
+  // );
+
+  const ee = query(ff, where("chatId", "!=", "sds"));
+  const eee = await getDocs(ee);
+  let unsubscribe = onSnapshot(ee, (eee) => {
+    console.log("ss");
+
+    eee.forEach(async (document) => {
+      // console.log("--------------------------------");
+      console.log(document.data());
+    });
+  });
+}
+
+// aa();
+//
+
+// test();
 </script>
 <template>
   <slot></slot>
