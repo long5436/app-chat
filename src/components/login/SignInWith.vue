@@ -17,7 +17,9 @@ import { addDocument } from "@/firebase/services";
 
 import { useRouter } from "vue-router";
 import createColor from "@/plugins/createColor";
+import { useUserStore } from "@/stores/user";
 
+const userStore = useUserStore();
 const router = useRouter();
 
 // methods
@@ -62,6 +64,7 @@ async function signInWithFacebook() {
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    userStore.setUserInfo(user);
     router.push({ path: "/" });
   }
 });

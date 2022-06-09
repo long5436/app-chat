@@ -1,9 +1,20 @@
 <script setup>
 import avt from "@/assets/img/av2.jpg";
 import createAvtString from "@/plugins/createAvtString";
-import formatDate from "@/plugins/formatDate";
+import { formatDate } from "@/plugins/formatDate";
+// import { useUserStore } from "@/stores/user";
+// import { computed, reactive, watch, watchEffect } from "vue";
 //
+// const userStore = useUserStore();
 const props = defineProps(["data"]);
+// const userInfo = reactive({ data: {} });
+
+// watchEffect(() => {
+//   console.log(props.data);
+//   userInfo.data = computed(() => {
+//     return userStore.findUser(props.data?.uid);
+//   });
+// });
 </script>
 
 <template>
@@ -13,7 +24,10 @@ const props = defineProps(["data"]);
       <div
         v-else
         :class="$style.avtName"
-        :style="{ background: createAvtString(data?.displayName).color }"
+        :style="{
+          background: data.theme.backgroundColor,
+          color: data.theme.textColor,
+        }"
       >
         <span>
           {{ createAvtString(data?.displayName).name }}

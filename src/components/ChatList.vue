@@ -1,5 +1,7 @@
 <script setup>
 import av2 from "@/assets/img/av2.jpg";
+import { formatTime } from "@/plugins/formatDate";
+import sortArray from "sort-objects-array";
 import { useUserStore } from "@/stores/user";
 import { useChatStore } from "@/stores/chat";
 import { getUser, getChat } from "@/firebase/services";
@@ -12,12 +14,57 @@ import {
   computed,
 } from "vue";
 import createAvtString from "@/plugins/createAvtString";
+import {
+  collection,
+  db,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+} from "@/firebase/config";
 
 //
 const userStore = useUserStore();
 const chatStore = useChatStore();
-const chatList = computed(() => chatStore.getChatList);
 const currentChatId = ref("");
+
+const chatList = computed(() => chatStore.getChatList);
+const chatListSnapShot = reactive({ data: [], data2: [] });
+chatListSnapShot.data = chatList.value;
+
+watch(chatList, (newVal) => {
+  console.log("da thay doi");
+  chatListSnapShot.data2 = newVal;
+  // chatListSnapShot.data = newVal;
+
+  chatListSnapShot.data2.forEach(async (e, index) => {
+    console.log(e.id, index);
+    console.log("bi chay lai");
+    const collectionRef = collection(db, "messages");
+    const q = query(collectionRef, where("chatId", "==", e.id));
+    const querySnapshot = await getDocs(q);
+
+    let unsubscribe = onSnapshot(q, (querySnapshot) => {
+      // watch(chatListSnapShot, () => {
+      //   unsubscribe();
+      // });
+      querySnapshot.forEach(async (document) => {
+        // console.log(document.data);
+        chatListSnapShot.data2[index].mess = document.get("chatData").pop();
+        chatListSnapShot.data2[index].updatedAt = document
+          .get("chatData")
+          .pop().createdAt;
+        chatListSnapShot.data = sortArray(
+          chatListSnapShot.data2,
+          "updatedAt",
+          "desc"
+        );
+      });
+    });
+  });
+});
+
+watchEffect(() => {});
 
 // methods
 
@@ -48,7 +95,7 @@ async function handleClick(data) {
   </div>
   <div :class="$style.listMessages">
     <div
-      v-for="(i, index) in chatList"
+      v-for="(i, index) in chatListSnapShot.data"
       :key="index"
       :class="[
         $style.item,
@@ -76,10 +123,11 @@ async function handleClick(data) {
       </div>
       <div :class="$style.content">
         <h3>{{ i.friendInfo?.displayName }}</h3>
-        <p :class="$style.message">I love you so I love you so I love you so</p>
+        <p :class="$style.message">{{ i.mess?.content }}</p>
       </div>
       <div :class="$style.info">
-        <span>23:33</span>
+        <span v-if="i.mess">{{ formatTime(i.mess?.createdAt.seconds) }}</span>
+        <span v-else>{{ formatTime(i.createdAt.seconds) }}</span>
         <span :class="$style.noti"> 12 </span>
       </div>
     </div>
@@ -159,6 +207,7 @@ async function handleClick(data) {
     }
 
     .content {
+      flex: 1;
       .message {
         display: -webkit-box;
         -webkit-box-orient: vertical;

@@ -7,6 +7,7 @@ import {
   reactive,
   computed,
   watch,
+  ref,
   getCurrentInstance,
   onMounted,
   watchEffect,
@@ -28,6 +29,7 @@ const chatStore = useChatStore();
 const userStore = useUserStore();
 const dChat = reactive({ data: [] });
 const currentChatId = computed(() => chatStore.currentChatId);
+const btnScroll = ref(false);
 
 const chats = computed(() => {
   // console.log(currentChatId.value);
@@ -62,6 +64,22 @@ function scrollBottom() {
 
 onMounted(() => {
   scrollBottom();
+  const element = proxy.$refs.chatMain;
+  let scrollHeight;
+  setTimeout(() => {
+    scrollHeight = element.scrollTop;
+    // console.log(scrollHeight);
+  }, 2000);
+
+  element.addEventListener("scroll", () => {
+    if (element.scrollTop < scrollHeight - 300) {
+      // console.log("ok");
+      btnScroll.value = true;
+    } else {
+      // console.log("not ok");
+      btnScroll.value = false;
+    }
+  });
 });
 
 watch(dChat, (n) => {
@@ -75,16 +93,58 @@ watch(chats, (n) => {
 </script>
 <template>
   <div :class="$style.chatView" ref="chatMain">
-    <template v-for="item in chats" :key="item.index">
-      <ChatMessageRight v-if="item.uid === user.uid" :data="item" />
-      <ChatMessageLeft v-else :data="item" />
-    </template>
+    <div ref="chatContent">
+      <template v-for="item in chats" :key="item.index">
+        <ChatMessageRight v-if="item.uid === user.uid" :data="item" />
+        <ChatMessageLeft v-else :data="item" />
+      </template>
+    </div>
+    <div :class="$style.scroll">
+      <div v-show="btnScroll" :class="$style.btn" @click="scrollBottom">
+        <v-icon name="io-arrow-down-outline" :class="$style.icon" />
+      </div>
+    </div>
   </div>
 </template>
 <style lang="scss" module>
 .chatView {
+  position: relative;
   height: 100%;
   overflow-y: scroll;
   padding-bottom: 12px;
+
+  .scroll {
+    position: fixed;
+    bottom: 120px;
+    // left: 50%;
+    width: calc(100vw - 300px);
+    display: flex;
+    right: 0;
+    // background: yellow;
+    // transform: translateX(-300px);
+
+    .btn {
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 50em;
+      border: 1px solid #ddd;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      cursor: pointer;
+
+      &:hover {
+        background: #eee;
+      }
+      .icon {
+        margin: auto;
+        width: 24px;
+        height: 24px;
+        color: #ff7204;
+      }
+    }
+
+    // transform: translateX(-50%);
+  }
 }
 </style>

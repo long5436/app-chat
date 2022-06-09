@@ -27,6 +27,7 @@ import {
   query,
   where,
   updateDoc,
+  orderBy,
   increment,
   arrayUnion,
 } from "firebase/firestore";
@@ -80,6 +81,7 @@ export {
   query,
   where,
   updateDoc,
+  orderBy,
   increment,
   arrayUnion,
 };

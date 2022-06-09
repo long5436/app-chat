@@ -12,7 +12,9 @@
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^2.0.13",
     "sass": "^1.52.1",
+    "sort-objects-array": "^1.7.1",
     "uniqid": "^5.4.0",
+    "unique-objects": "^1.0.5",
     "vue": "^3.2.33",
     "vue-router": "^4.0.14"
   },

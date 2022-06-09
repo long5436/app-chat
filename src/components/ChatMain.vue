@@ -32,7 +32,8 @@ const currentChatUser = computed(() => chatStore.getCurrentChatUser);
           <div
             :class="$style.avtName"
             :style="{
-              background: createAvtString(currentChatUser.displayName).color,
+              background: currentChatUser.theme?.backgroundColor,
+              color: currentChatUser.theme?.textColor,
             }"
           >
             <span>{{ createAvtString(currentChatUser.displayName).name }}</span>
