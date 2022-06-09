@@ -1,24 +1,57 @@
 <script setup>
 import avt from "@/assets/img/av2.jpg";
 import { watchEffect, reactive } from "vue";
-import { db, onSnapshot, collection, doc } from "@/firebase/config";
+import {
+  db,
+  onSnapshot,
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+} from "@/firebase/config";
+
+import { limit } from "firebase/firestore";
+
 import { useUserStore } from "@/stores/user";
 import { addFiend } from "@/firebase/services";
 import createAvtString from "@/plugins/createAvtString";
+import { computed } from "vue";
 
 //
 const userStore = useUserStore();
 const data = reactive({ users: [] });
+const ids = computed(() => userStore.getFriendIds);
 
-watchEffect(() => {
-  onSnapshot(collection(db, "users"), (snapshot) => {
-    const d = snapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-    data.users = d;
-    // console.log(data);
-  });
+watchEffect(async () => {
+  // console.log(ids.value);
+
+  if (ids.value) {
+    const collectionRef = collection(db, "users");
+    const q = query(collectionRef, orderBy("createdAt", "desc"), limit(10));
+    const querySnapshot = await getDocs(q);
+
+    onSnapshot(q, (querySnapshot) => {
+      data.users = [];
+      querySnapshot.forEach(async (document) => {
+        // console.log(document.data());
+        const a = ids.value.findIndex((e) => e === document.data().uid);
+        // console.log(a);
+        if (a === -1) {
+          data.users.push(document.data());
+        }
+      });
+    });
+  }
+
+  // onSnapshot(collection(db, "users"), (snapshot) => {
+  //   const d = snapshot.docs.map((doc) => ({
+  //     ...doc.data(),
+  //     id: doc.id,
+  //   }));
+  //   data.users = d;
+  //   // console.log(data);
+  // });
 });
 
 // methods
@@ -47,7 +80,10 @@ async function handleAddfriend(user) {
       <div
         v-else
         :class="$style.avtText"
-        :style="{ background: createAvtString(i.displayName).color }"
+        :style="{
+          background: i.theme.backgroundColor,
+          color: i.theme.textColor,
+        }"
       >
         <span>{{ createAvtString(i.displayName).name }}</span>
       </div>

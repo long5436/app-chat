@@ -11,6 +11,7 @@ import {
   doc,
   updateDoc,
   onSnapshot,
+  orderBy,
   increment,
 } from "./config";
 
@@ -26,10 +27,33 @@ const addDocument = async (collectionName, data) => {
     name: data.name,
     chatData: [],
     createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
   });
 };
 
+const getChatDocument = async (currentUserUid, newUserUid) => {
+  console.log();
+  const collectionRef = collection(db, "chats");
+  const q = query(
+    collectionRef,
+    where("id", "in", [
+      currentUserUid + newUserUid,
+      newUserUid + currentUserUid,
+    ])
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  let data;
+  querySnapshot.forEach(async (doc) => {
+    data = doc.data();
+  });
+  return data;
+};
+
 const addFiend = async (collectionName, currentUser, newFriend) => {
+  console.log(newFriend);
+
   const add = async (document, data) => {
     const documentRef = doc(db, "users", document.id);
     await updateDoc(documentRef, { friends: arrayUnion(data) });
@@ -40,7 +64,12 @@ const addFiend = async (collectionName, currentUser, newFriend) => {
   const querySnapshot = await getDocs(q);
 
   querySnapshot.forEach(async (document) => {
-    add(document, newFriend);
+    add(document, {
+      displayName: newFriend.displayName,
+      photoURL: newFriend.photoURL,
+      uid: newFriend.uid,
+      theme: newFriend.theme,
+    });
   });
 
   // add current user to list friends of new friend
@@ -53,6 +82,7 @@ const addFiend = async (collectionName, currentUser, newFriend) => {
       displayName: currentUser.username,
       photoURL: currentUser.photo,
       uid: currentUser.uid,
+      theme: currentUser.theme,
     });
   });
 };
@@ -99,7 +129,8 @@ const getChatLists = async (collectionName, currentUserUid) => {
   const collectionRef = collection(db, collectionName);
   const q = query(
     collectionRef,
-    where("members", "array-contains", currentUserUid)
+    where("members", "array-contains", currentUserUid),
+    orderBy("updatedAt", "desc")
   );
   const querySnapshot = await getDocs(q);
   let data = [];
@@ -122,6 +153,7 @@ const sendMessage = async (collectionName, currentChatId, message) => {
     const documentRef = doc(db, collectionName, document.id);
     await updateDoc(documentRef, {
       chatData: arrayUnion(data),
+      updatedAt: serverTimestamp(),
     });
   };
 
@@ -135,4 +167,12 @@ const sendMessage = async (collectionName, currentChatId, message) => {
   });
 };
 
-export { addDocument, addFiend, getUser, getChat, getChatLists, sendMessage };
+export {
+  addDocument,
+  addFiend,
+  getUser,
+  getChat,
+  getChatLists,
+  sendMessage,
+  getChatDocument,
+};

@@ -1,7 +1,7 @@
 <script setup>
 import avt from "@/assets/img/av2.jpg";
 import createAvtString from "@/plugins/createAvtString";
-import formatDate from "@/plugins/formatDate";
+import { formatDate } from "@/plugins/formatDate";
 
 const props = defineProps(["data"]);
 </script>

@@ -28,6 +28,10 @@ const userApp = useAppStore();
 const userInfo = computed(() => userStore.getUserinfo);
 const chatList = reactive({ data: [] });
 
+chatStore.$reset();
+userStore.$reset();
+userApp.$reset();
+
 // async function getChatListsUser() {
 //   if (userInfo.value.uid) {
 //     const data = await getChatLists("chats", userInfo.value.uid);
@@ -64,6 +68,7 @@ watchEffect(async () => {
         const uid = user.members.find((mem) => mem !== userInfo.value.uid);
         // console.log(uid);
         const res = await getUser("users", uid);
+        userStore.addUser(res);
         user.friendInfo = res;
         // console.log(user);
         // console.log(chatList.data);
@@ -163,31 +168,11 @@ watchEffect(async () => {
 });
 
 //
-async function aa() {
-  const ff = collection(db, "messages");
-  // const ee = query(
-  //   ff,
-  //   where(
-  //     "chatId",
-  //     "==",
-  //     "VaVDswFQ9dijmizj8nalSxyz2E7XSaQo3cs0eHspKRQVhZ0ChWAx7DEc"
-  //   )
-  // );
-
-  const ee = query(ff, where("chatId", "!=", "sds"));
-  const eee = await getDocs(ee);
-  let unsubscribe = onSnapshot(ee, (eee) => {
-    console.log("ss");
-
-    eee.forEach(async (document) => {
-      // console.log("--------------------------------");
-      console.log(document.data());
-    });
-  });
-}
-
-// aa();
+const a = async () => {};
 //
+
+// import { getMessaging } from "firebase/messaging/sw";
+// const messaging = getMessaging(firebaseApp);
 
 // test();
 </script>

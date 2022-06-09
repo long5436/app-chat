@@ -1,6 +1,6 @@
 import { TwitterAuthProvider } from "firebase/auth";
 import { defineStore } from "pinia";
-import uniqid from "uniqid";
+// import uniqid from "uniqid";
 
 export const useChatStore = defineStore({
   id: "chat",
@@ -40,9 +40,10 @@ export const useChatStore = defineStore({
       if (data) {
         this.chatListContent.find((chat, index) => {
           if (chat.chatId === data.chatId) {
+            // console.log(chat);
             const bool =
-              data.pop.createdAt.seconds ===
-              chat.chatData[chat.chatData.length - 1]?.createdAt.seconds;
+              data.pop?.createdAt?.seconds ===
+              chat.chatData[chat.chatData?.length - 1]?.createdAt.seconds;
             // console.log(bool);
             if (!bool) {
               chat.chatData.push(data.pop);

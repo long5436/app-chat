@@ -3,25 +3,30 @@ import av2 from "@/assets/img/user.webp";
 import { watchEffect, reactive, computed } from "vue";
 import { useUserStore } from "../stores/user";
 import { useAppStore } from "@/stores/app";
-import { addDocument, getUser } from "@/firebase/services";
+import { addDocument, getUser, getChatDocument } from "@/firebase/services";
 import createAvtString from "@/plugins/createAvtString";
+import { useRouter } from "vue-router";
 
 //
 const appStore = useAppStore();
 const userStore = useUserStore();
 const userInfo = computed(() => userStore.getUserinfo);
 const friends = computed(() => appStore.getListFriend);
+const router = useRouter();
 
 async function handleClickFriend(user) {
-  const chat = await getUser("chats", userInfo.value.uid, user.uid);
+  const chat = await getChatDocument(userInfo.value.uid, user.uid);
+  console.log(chat);
   // console.log(user);
-  // console.log(chat);
-  if (!chat.uid) {
+
+  if (!chat) {
     addDocument("chats", {
       id: userInfo.value.uid + user.uid,
       name: "",
       members: [userInfo.value.uid, user.uid],
     });
+  } else {
+    router.push({ path: "/" });
   }
 }
 
@@ -51,7 +56,10 @@ async function handleClickFriend(user) {
         <div
           v-else
           :class="$style.avtText"
-          :style="{ background: createAvtString(i.displayName).color }"
+          :style="{
+            background: i.theme.backgroundColor,
+            color: i.theme.textColor,
+          }"
         >
           <span>{{ createAvtString(i.displayName).name }} </span>
         </div>

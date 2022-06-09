@@ -2,6 +2,7 @@
 import avatarImg from "@/assets/img/avatar.jpg";
 import { useUserStore } from "../stores/user";
 import { useAppStore } from "../stores/app";
+import { useChatStore } from "../stores/chat";
 import { useRouter } from "vue-router";
 import { reactive, ref, computed, watch, watchEffect } from "vue";
 import { auth, signOut, db, collection, onSnapshot } from "../firebase/config";
@@ -11,6 +12,7 @@ import createAvtString from "@/plugins/createAvtString";
 //
 const userStore = useUserStore();
 const appStore = useAppStore();
+const chatStore = useChatStore();
 const router = useRouter();
 const userInf = reactive({});
 
@@ -37,6 +39,9 @@ const getUser = computed(() => {
 function logout() {
   // console.log(auth);
   signOut(auth);
+  chatStore.$reset();
+  userStore.$reset();
+  appStore.$reset();
   // console.log(signOut);
 }
 
@@ -63,7 +68,10 @@ function changePage(value) {
         <div
           v-else
           :class="$style.avtText"
-          :style="{ background: createAvtString(getUser.username).color }"
+          :style="{
+            background: getUser.theme?.backgroundColor,
+            color: getUser.theme?.textColor,
+          }"
         >
           <span>{{ createAvtString(getUser.username).name }} </span>
         </div>

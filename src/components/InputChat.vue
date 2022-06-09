@@ -4,10 +4,20 @@ import { useChatStore } from "@/stores/chat";
 import { useUserStore } from "@/stores/user";
 import { sendMessage } from "@/firebase/services";
 
+import {
+  collection,
+  db,
+  query,
+  arrayUnion,
+  getDocs,
+  where,
+  updateDoc,
+} from "@/firebase/config";
+
 //
 const chatStore = useChatStore();
 const userStore = useUserStore();
-const userInfo = userStore.userinfo;
+const userInfo = computed(() => userStore.getUserinfo);
 const currentChatId = computed(() => chatStore.getCurrentChatId);
 const { proxy } = getCurrentInstance();
 const input = ref("");
@@ -34,21 +44,45 @@ function submit() {
   // chatStore.addChat(input.value);
   // console.log(chatStore);
   sendMessage("messages", currentChatId.value, {
-    displayName: userInfo.username,
-    photoURL: userInfo.photo,
-    uid: userInfo.uid,
+    displayName: userInfo.value.username,
+    photoURL: userInfo.value.photo,
+    uid: userInfo.value.uid,
     content: input.value,
     createdAt: new Date(),
+    theme: userInfo.value.theme,
   });
 }
 
+// import { getDatabase, ref, runTransaction } from "firebase/database";
+async function focus(status) {
+  // const collectionRef = collection(db, "messages");
+  // const q = query(
+  //   collectionRef,
+  //   where(
+  //     "chatId",
+  //     "==",
+  //     "2RbRxEfv37gI1yqsmzZSJfDFTS8tOWjfkRrN7ZHhfgzZh1nwpC3FUwoC"
+  //   )
+  // );
+  // const querySnapshot = await getDocs(q);
+  // querySnapshot.forEach(async (document) => {
+  //   await updateDoc(collectionRef, { typing: arrayUnion("balabal") });
+  // });
+  // if (status) {
+  //   console.log("ok");
+  // } else {
+  //   console.log("not ok");
+  // }
+}
 //
 
 watch(input, (n) => {
   if (n.length > 0) {
     textShow.value = false;
+    focus(true);
   } else {
     textShow.value = true;
+    focus(false);
   }
 });
 </script>
