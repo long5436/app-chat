@@ -8,6 +8,7 @@ import { reactive, ref, computed, watch, watchEffect } from "vue";
 import { auth, signOut, db, collection, onSnapshot } from "../firebase/config";
 import userImg from "@/assets/img/user.webp";
 import createAvtString from "@/plugins/createAvtString";
+// import { isActive, isExactActive } from "vue-router";
 
 //
 const userStore = useUserStore();
@@ -81,7 +82,7 @@ function changePage(value) {
         <!-- <v-icon name="bi-chevron-down" :class="$style.icon" /> -->
       </div>
       <div>
-        <button
+        <!-- <button
           :class="[$style.btn, { [$style.btnActive]: !appStore.getPageFriend }]"
           @click="changePage"
         >
@@ -95,6 +96,30 @@ function changePage(value) {
         >
           <v-icon name="la-user-friends-solid" :class="$style.icon" />
           <span>Bạn bè</span>
+        </button> -->
+
+        <router-link
+          :active-class="$style.btnActive"
+          :to="{ path: '/' }"
+          :class="[$style.btn]"
+        >
+          <v-icon name="io-chatbubble-ellipses-outline" :class="$style.icon" />
+          <span>Tin nhắn</span>
+          <span :class="$style.noti">6</span>
+        </router-link>
+
+        <router-link
+          :to="{ path: '/friends' }"
+          :class="[$style.btn]"
+          :active-class="$style.btnActive"
+        >
+          <v-icon name="la-user-friends-solid" :class="$style.icon" />
+          <span>Bạn bè</span>
+        </router-link>
+
+        <button :class="[$style.btn, { [$style.btnActive]: false }]">
+          <v-icon name="io-notifications-outline" :class="$style.icon" />
+          <span>Thông báo</span>
         </button>
       </div>
       <div>
@@ -113,7 +138,7 @@ function changePage(value) {
 <style lang="scss" module>
 .header {
   width: 100%;
-  height: 40px;
+  height: 50px;
   background: var(--background);
   border-bottom: 1px solid #ddd;
 
@@ -170,8 +195,12 @@ function changePage(value) {
     border: 1px solid transparent;
     background: transparent;
     border-radius: 6px;
+    text-decoration: none;
+    color: #333;
+    padding: 0 6px;
     .icon {
       margin-right: 4px;
+      color: #777;
     }
 
     span {
@@ -194,7 +223,7 @@ function changePage(value) {
       background: #fff;
     }
   }
-
+  .router-link-active,
   .btnActive {
     border: 1px solid #ddd;
     background: #fff;

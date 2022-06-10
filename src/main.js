@@ -19,6 +19,10 @@ import {
   IoSend,
   BiCheckAll,
   IoArrowDownOutline,
+  CoMic,
+  MdMorehoriz,
+  FaVideo,
+  IoNotificationsOutline,
 } from "oh-vue-icons/icons";
 
 const app = createApp(App);
@@ -36,7 +40,11 @@ addIcons(
   HiLogout,
   IoSend,
   BiCheckAll,
-  IoArrowDownOutline
+  IoArrowDownOutline,
+  CoMic,
+  MdMorehoriz,
+  FaVideo,
+  IoNotificationsOutline
 );
 
 app.use(createPinia());

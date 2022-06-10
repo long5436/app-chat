@@ -1,7 +1,21 @@
 <script setup>
 import avt from "@/assets/img/av2.jpg";
 import InputChatForm from "./InputChat.vue";
-import FriendView from "./FriendView.vue";
+import ChatView from "./ChatView.vue";
+import createAvtString from "@/plugins/createAvtString";
+
+//
+import { useChatStore } from "@/stores/chat";
+import { watch, computed } from "vue";
+const chatStore = useChatStore();
+const currentChatUser = computed(() => chatStore.getCurrentChatUser);
+
+// console.log(currentChatUser.value);
+
+// watch(currentChatUser, (n) => {
+//   console.log(n);
+//   // chatStore.addChats(n.chatData);
+// });
 </script>
 
 <template>
@@ -9,13 +23,37 @@ import FriendView from "./FriendView.vue";
     <div :class="$style.wrapper">
       <div :class="$style.user">
         <div :class="$style.info">
-          <!-- <img :src="avt" alt="" :class="$style.avt" /> -->
-          <h2 :class="$style.username">Danh sách bạn bè</h2>
+          <img
+            v-if="currentChatUser.photoURL"
+            :src="currentChatUser.photoURL || avt"
+            alt=""
+            :class="$style.avt"
+          />
+          <div
+            v-else
+            :class="$style.avtName"
+            :style="{
+              background: currentChatUser.theme?.backgroundColor,
+              color: currentChatUser.theme?.textColor,
+            }"
+          >
+            <span>{{ createAvtString(currentChatUser.displayName).name }}</span>
+          </div>
+          <h2 :class="$style.username">
+            {{ currentChatUser.displayName }}
+          </h2>
         </div>
       </div>
       <div>
         <button :class="$style.btn">
+          <v-icon name="fa-video" :class="$style.icon" />
+        </button>
+        <button :class="$style.btn">
           <v-icon name="ri-search-2-line" :class="$style.icon" />
+        </button>
+
+        <button :class="$style.btn">
+          <v-icon name="md-morehoriz" :class="$style.icon" />
         </button>
       </div>
     </div>
@@ -24,11 +62,11 @@ import FriendView from "./FriendView.vue";
     <div :class="$style.wrapper">
       <div :class="$style.content">
         <div :class="$style.messages">
-          <FriendView />
+          <ChatView :data="currentChatUser" />
         </div>
-        <!-- <div :class="$style.inputChat">
+        <div :class="$style.inputChat">
           <InputChatForm />
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -56,6 +94,20 @@ import FriendView from "./FriendView.vue";
         height: 50px;
         border-radius: 50em;
         margin-right: 10px;
+      }
+
+      .avtName {
+        display: flex;
+        width: 50px;
+        height: 50px;
+        border-radius: 50em;
+        margin-right: 10px;
+        background: #ddd;
+        span {
+          margin: auto;
+          font-size: 1.6rem;
+          transform: translateY(-1px);
+        }
       }
     }
   }
@@ -99,7 +151,7 @@ import FriendView from "./FriendView.vue";
 
       .inputChat {
         // height: 80px;
-        border-top: 1px solid #ddd;
+        // border-top: 1px solid #ddd;
         padding: 20px 0;
         display: flex;
         align-items: center;

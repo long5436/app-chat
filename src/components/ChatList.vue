@@ -1,5 +1,6 @@
 <script setup>
 import av2 from "@/assets/img/av2.jpg";
+import audio from "@/assets/audio/audio.mp3";
 import { formatTime } from "@/plugins/formatDate";
 import sortArray from "sort-objects-array";
 import { useUserStore } from "@/stores/user";
@@ -28,9 +29,16 @@ const userStore = useUserStore();
 const chatStore = useChatStore();
 const currentChatId = ref("");
 
+const userInfo = computed(() => userStore.getUserinfo);
 const chatList = computed(() => chatStore.getChatList);
 const chatListSnapShot = reactive({ data: [], data2: [] });
 chatListSnapShot.data = chatList.value;
+
+function play() {
+  // console.log("okasa");
+  let audioMess = new Audio(audio);
+  audioMess.play();
+}
 
 watch(chatList, (newVal) => {
   console.log("da thay doi");
@@ -39,21 +47,23 @@ watch(chatList, (newVal) => {
 
   chatListSnapShot.data2.forEach(async (e, index) => {
     console.log(e.id, index);
-    console.log("bi chay lai");
     const collectionRef = collection(db, "messages");
     const q = query(collectionRef, where("chatId", "==", e.id));
     const querySnapshot = await getDocs(q);
 
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
-      // watch(chatListSnapShot, () => {
-      //   unsubscribe();
-      // });
       querySnapshot.forEach(async (document) => {
         // console.log(document.data);
+        const uid = document.get("chatData").pop()?.uid;
+
+        if (uid != userInfo.value.uid) {
+          play();
+        }
+
         chatListSnapShot.data2[index].mess = document.get("chatData").pop();
         chatListSnapShot.data2[index].updatedAt = document
           .get("chatData")
-          .pop().createdAt;
+          .pop()?.createdAt;
         chatListSnapShot.data = sortArray(
           chatListSnapShot.data2,
           "updatedAt",
@@ -61,6 +71,8 @@ watch(chatList, (newVal) => {
         );
       });
     });
+
+    // if (co > 1) unsubscribe();
   });
 });
 
@@ -208,6 +220,8 @@ async function handleClick(data) {
 
     .content {
       flex: 1;
+      overflow: hidden;
+
       .message {
         display: -webkit-box;
         -webkit-box-orient: vertical;
