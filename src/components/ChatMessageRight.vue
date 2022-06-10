@@ -51,10 +51,12 @@ const props = defineProps(["data"]);
     }
     .content {
       margin-right: 10px;
+      text-align: right;
 
       .text {
         // background: #ddd;
-        padding: 8px;
+        display: inline-block;
+        padding: 10px;
         border-radius: 16px 16px 4px 16px;
         background-image: linear-gradient(
           to bottom,
@@ -72,6 +74,7 @@ const props = defineProps(["data"]);
 
         p {
           word-break: break-all;
+          font-size: 1.1rem;
         }
       }
       .time {

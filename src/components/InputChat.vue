@@ -3,6 +3,7 @@ import { ref, getCurrentInstance, watch, computed } from "vue";
 import { useChatStore } from "@/stores/chat";
 import { useUserStore } from "@/stores/user";
 import { sendMessage } from "@/firebase/services";
+import SendIcon from "@/components/icons/send.vue";
 
 import {
   collection,
@@ -22,6 +23,8 @@ const currentChatId = computed(() => chatStore.getCurrentChatId);
 const { proxy } = getCurrentInstance();
 const input = ref("");
 const textShow = ref("true");
+const showMic = ref("true");
+const enableSendBtn = ref("false");
 
 function handleChange(event) {
   if (event.keyCode === 13) {
@@ -39,18 +42,22 @@ function handleKeyDown(event) {
   }
 }
 
-function submit() {
-  // console.log(input.value);
-  // chatStore.addChat(input.value);
-  // console.log(chatStore);
-  sendMessage("messages", currentChatId.value, {
-    displayName: userInfo.value.username,
-    photoURL: userInfo.value.photo,
-    uid: userInfo.value.uid,
-    content: input.value,
-    createdAt: new Date(),
-    theme: userInfo.value.theme,
-  });
+function submit(e) {
+  if (input.value) {
+    sendMessage("messages", currentChatId.value, {
+      displayName: userInfo.value.username,
+      photoURL: userInfo.value.photo,
+      uid: userInfo.value.uid,
+      content: input.value,
+      createdAt: new Date(),
+      theme: userInfo.value.theme,
+    });
+
+    const el = proxy.$refs.iput;
+
+    if (el) el.innerText = "";
+    input.value = "";
+  }
 }
 
 // import { getDatabase, ref, runTransaction } from "firebase/database";
@@ -79,9 +86,13 @@ async function focus(status) {
 watch(input, (n) => {
   if (n.length > 0) {
     textShow.value = false;
+    showMic.value = false;
+    enableSendBtn.value = false;
     focus(true);
   } else {
     textShow.value = true;
+    enableSendBtn.value = true;
+    showMic.value = true;
     focus(false);
   }
 });
@@ -90,6 +101,9 @@ watch(input, (n) => {
 <template>
   <div :class="$style.box">
     <div :class="$style.input">
+      <button :class="[$style.mic, { [$style.hide]: !showMic }]">
+        <v-icon name="co-mic" :class="$style.icon" />
+      </button>
       <div :class="$style.inputText">
         <p
           contenteditable="true"
@@ -102,7 +116,7 @@ watch(input, (n) => {
           @keydown.enter.prevent
           ref="iput"
         ></p>
-        <p v-if="textShow" :class="$style.text">Tin nhắn</p>
+        <p v-if="textShow" :class="$style.text">Nội dung tin nhắn</p>
       </div>
       <div :class="$style.actions">
         <button :class="$style.btn">
@@ -110,8 +124,8 @@ watch(input, (n) => {
         </button>
       </div>
     </div>
-    <button :class="$style.sendBtn">
-      <v-icon name="io-send" :class="$style.icon" />
+    <button :class="$style.sendBtn" :disabled="enableSendBtn" @click="submit">
+      <SendIcon :class="$style.icon" />
     </button>
   </div>
 </template>
@@ -119,12 +133,38 @@ watch(input, (n) => {
 .box {
   display: flex;
   width: 100%;
+  background: #e6e5e6;
+  border-radius: 10px;
+  padding: 4px;
+
+  .mic {
+    border: 0;
+    background: transparent;
+    .icon {
+      width: 30px;
+      height: 30px;
+      color: #777;
+    }
+
+    &:hover {
+      .icon {
+        color: #ec532a;
+      }
+    }
+  }
+
+  .hide {
+    // transition: 0.3s;
+    visibility: hidden;
+    // display: none;
+    width: 10px;
+  }
   //   justify-content: space-between;
   .input {
     flex: 1;
     width: 100px;
     // height: 40px;
-    background: #fff;
+    // background: #fff;
     display: flex;
     // align-items: center;
     flex-wrap: wrap;
@@ -133,7 +173,7 @@ watch(input, (n) => {
     user-select: text;
     white-space: pre-wrap;
     word-break: break-word;
-    border: 1px solid #ddd;
+    // border: 1px solid #ddd;
     border-radius: 20px;
 
     .inputText {
@@ -150,7 +190,7 @@ watch(input, (n) => {
         outline: none;
         // line-height: 26px;
         transform: translateY(1px);
-        padding: 8px 20px;
+        padding: 8px 20px 8px 4px;
       }
 
       .text {
@@ -187,9 +227,20 @@ watch(input, (n) => {
     border: 0;
     color: #888;
     margin-left: 10px;
+    // background: #ec542a2f;
+    background: transparent;
+    display: flex;
+    align-items: center;
     .icon {
-      width: 30px;
-      height: 30px;
+      width: 24px;
+      height: 24px;
+      color: #ec532a;
+    }
+  }
+
+  .sendBtn[disabled] {
+    .icon {
+      color: #999;
     }
   }
 }

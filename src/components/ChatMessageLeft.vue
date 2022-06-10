@@ -75,10 +75,13 @@ const props = defineProps(["data"]);
 
     .text {
       background: #ddd;
-      padding: 8px;
+      padding: 10px;
       border-radius: 4px 16px 16px 16px;
+      display: inline-block;
+
       p {
         word-break: break-all;
+        font-size: 1.1rem;
       }
     }
     .time {
