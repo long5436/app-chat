@@ -137,6 +137,7 @@ watch(input, (n) => {
   border-radius: 10px;
   padding: 4px;
 
+  transition: 0.3s;
   .mic {
     border: 0;
     background: transparent;

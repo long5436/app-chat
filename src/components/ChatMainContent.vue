@@ -1,6 +1,7 @@
 <script setup>
 import avt from "@/assets/img/av2.jpg";
 import InputChatForm from "./InputChat.vue";
+import ChatMainMenu from "./ChatMainMenu.vue";
 import ChatView from "./ChatView.vue";
 import createAvtString from "@/plugins/createAvtString";
 
@@ -45,16 +46,7 @@ const currentChatUser = computed(() => chatStore.getCurrentChatUser);
         </div>
       </div>
       <div>
-        <button :class="$style.btn">
-          <v-icon name="fa-video" :class="$style.icon" />
-        </button>
-        <button :class="$style.btn">
-          <v-icon name="ri-search-2-line" :class="$style.icon" />
-        </button>
-
-        <button :class="$style.btn">
-          <v-icon name="md-morehoriz" :class="$style.icon" />
-        </button>
+        <ChatMainMenu />
       </div>
     </div>
   </div>
@@ -108,25 +100,6 @@ const currentChatUser = computed(() => chatStore.getCurrentChatUser);
           font-size: 1.6rem;
           transform: translateY(-1px);
         }
-      }
-    }
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    height: 34px;
-    border: 0;
-
-    .icon {
-      width: 30px;
-      height: 26px;
-      color: #777;
-    }
-
-    &:hover {
-      .icon {
-        color: #ec532a;
       }
     }
   }
