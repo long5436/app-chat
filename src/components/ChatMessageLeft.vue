@@ -2,19 +2,14 @@
 import avt from "@/assets/img/av2.jpg";
 import createAvtString from "@/plugins/createAvtString";
 import { formatDate } from "@/plugins/formatDate";
-// import { useUserStore } from "@/stores/user";
-// import { computed, reactive, watch, watchEffect } from "vue";
+import { useAppStore } from "@/stores/app";
+import { computed } from "vue";
 //
 // const userStore = useUserStore();
 const props = defineProps(["data"]);
-// const userInfo = reactive({ data: {} });
+const appStore = useAppStore();
 
-// watchEffect(() => {
-//   console.log(props.data);
-//   userInfo.data = computed(() => {
-//     return userStore.findUser(props.data?.uid);
-//   });
-// });
+const currentTheme = computed(() => appStore.getTheme);
 </script>
 
 <template>
@@ -35,7 +30,13 @@ const props = defineProps(["data"]);
       </div>
     </div>
     <div :class="$style.content">
-      <div :class="$style.text">
+      <div
+        :class="$style.text"
+        :style="{
+          background: currentTheme.left.bg,
+          color: currentTheme.left.color,
+        }"
+      >
         <p>{{ data.content }}</p>
       </div>
       <p :class="$style.time">
