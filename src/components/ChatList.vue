@@ -1,6 +1,6 @@
 <script setup>
 import av2 from "@/assets/img/av2.jpg";
-import audio from "@/assets/audio/audio.mp3";
+import audio from "@/assets/audio/Ding-Dong.mp3";
 import { formatTime } from "@/plugins/formatDate";
 import sortArray from "sort-objects-array";
 import { useUserStore } from "@/stores/user";

@@ -23,6 +23,7 @@ import {
   MdMorehoriz,
   FaVideo,
   IoNotificationsOutline,
+  PrTimes,
 } from "oh-vue-icons/icons";
 
 const app = createApp(App);
@@ -44,7 +45,8 @@ addIcons(
   CoMic,
   MdMorehoriz,
   FaVideo,
-  IoNotificationsOutline
+  IoNotificationsOutline,
+  PrTimes
 );
 
 app.use(createPinia());
