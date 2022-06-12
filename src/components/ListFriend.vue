@@ -24,6 +24,20 @@ async function handleClickFriend(user) {
       id: userInfo.value.uid + user.uid,
       name: "",
       members: [userInfo.value.uid, user.uid],
+      theme: {
+        id: 0,
+        name: "Mặc định",
+        right: {
+          bg: "rgb(236,83,42)",
+          color: "#fff",
+        },
+        left: {
+          bg: "#E4E6EB",
+          color: "#000",
+        },
+        background: "",
+        preview: false,
+      },
     });
   } else {
     router.push({ path: "/" });

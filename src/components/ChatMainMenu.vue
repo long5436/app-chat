@@ -6,10 +6,17 @@ import { ref } from "vue";
 
 //
 const menu = ref(false);
+const theme = ref(false);
 
 // methods
 function toggleMenu() {
   menu.value = !menu.value;
+}
+
+function showThemeWindow() {
+  theme.value = !theme.value;
+  // console.log(theme.value);
+  // console.log("ok");
 }
 </script>
 
@@ -30,29 +37,21 @@ function toggleMenu() {
       </button>
     </div>
     <div :class="$style.pop" v-if="menu">
-      <div :class="$style.item">
+      <div :class="$style.item" @click="showThemeWindow">
         <div :class="$style.boxIcon">
           <ThemeIcon :class="$style.icon" />
         </div>
         <span>Thay đổi chủ đề</span>
       </div>
-      <div :class="$style.item">
-        <span>Thay đổi chủ đề</span>
-      </div>
-      <div :class="$style.item">
-        <span>Thay đổi chủ đề</span>
-      </div>
-      <div :class="$style.item">
-        <span>Thay đổi chủ đề</span>
-      </div>
     </div>
   </div>
 
-  <ChatTheme />
+  <ChatTheme v-if="theme" @close="showThemeWindow" />
 </template>
 <style lang="scss" module>
 .menu {
   position: relative;
+  z-index: 2;
 
   .pop {
     position: absolute;

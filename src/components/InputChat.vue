@@ -136,6 +136,8 @@ watch(input, (n) => {
   background: #e6e5e6;
   border-radius: 10px;
   padding: 4px;
+  background: rgba(215, 215, 215, 0.219);
+  backdrop-filter: blur(20px);
 
   transition: 0.3s;
   .mic {

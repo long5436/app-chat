@@ -3,14 +3,27 @@ import avt from "@/assets/img/av2.jpg";
 import createAvtString from "@/plugins/createAvtString";
 import { formatDate } from "@/plugins/formatDate";
 
+import { useAppStore } from "@/stores/app";
+import { computed } from "vue";
+//
+// const userStore = useUserStore();
 const props = defineProps(["data"]);
+const appStore = useAppStore();
+
+const currentTheme = computed(() => appStore.getTheme);
 </script>
 
 <template>
   <div :class="$style.msgR">
     <div :class="$style.body">
       <div :class="$style.content">
-        <div :class="$style.text">
+        <div
+          :class="$style.text"
+          :style="{
+            background: currentTheme.right.bg,
+            color: currentTheme.right.color,
+          }"
+        >
           <p>{{ data.content }}</p>
         </div>
         <p :class="$style.time">

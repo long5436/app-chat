@@ -12,7 +12,6 @@ import ChatMainWelcome from "./ChatMainWelcome.vue";
     <component
       :is="currentChatUser.displayName ? ChatMainContent : ChatMainWelcome"
     ></component>
-    <!-- <ChatMainContent /> -->
   </div>
 </template>
 <style lang="scss" module>

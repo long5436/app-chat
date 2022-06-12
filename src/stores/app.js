@@ -6,73 +6,24 @@ export const useAppStore = defineStore({
   state: () => ({
     pageFriend: false,
     listFriend: [],
-    themes: [
-      {
-        name: "Cầu vòng",
-        color: `linear-gradient(
-          to bottom,
-          #ff2618,
-          #ff5907,
-          #ffa001,
-          #c0c60b,
-          #9fc611,
-          #02b891,
-          #367fe5,
-          #8a39ef
-        )`,
-        background: "",
+    theme: {
+      id: 0,
+      name: "Mặc định",
+      right: {
+        bg: "rgb(236,83,42)",
+        color: "#fff",
       },
-      {
-        name: "Tình yêu",
-        color: `linear-gradient(
-          to bottom,
-          #ff2618,
-          #ff5907,
-          #ffa001,
-          #c0c60b,
-          #9fc611,
-          #02b891,
-          #367fe5,
-          #8a39ef
-        )`,
-        background: "",
+      left: {
+        bg: "#E4E6EB",
+        color: "#000",
       },
-      {
-        name: "Bầu trời",
-        color: `linear-gradient(
-          to bottom,
-          #ff2618,
-          #ff5907,
-          #ffa001,
-          #c0c60b,
-          #9fc611,
-          #02b891,
-          #367fe5,
-          #8a39ef
-        )`,
-        background: "",
-      },
-      {
-        name: "Thư giãn",
-        color: `linear-gradient(
-          to bottom,
-          #ff2618,
-          #ff5907,
-          #ffa001,
-          #c0c60b,
-          #9fc611,
-          #02b891,
-          #367fe5,
-          #8a39ef
-        )`,
-        background: "",
-      },
-    ],
+      background: "",
+    },
   }),
   getters: {
     getPageFriend: (state) => state.pageFriend,
     getListFriend: (state) => state.listFriend,
-    getThemes: (state) => state.themes,
+    getTheme: (state) => state.theme,
   },
   actions: {
     changePage() {
@@ -81,6 +32,10 @@ export const useAppStore = defineStore({
 
     addListFriend(listFriend) {
       this.listFriend = listFriend;
+    },
+
+    setTheme(theme) {
+      this.theme = theme;
     },
   },
 });
