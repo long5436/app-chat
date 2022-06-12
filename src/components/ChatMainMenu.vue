@@ -48,7 +48,7 @@ function toggleMenu() {
     </div>
   </div>
 
-  <ChatTheme />
+  <!-- <ChatTheme /> -->
 </template>
 <style lang="scss" module>
 .menu {
