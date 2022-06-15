@@ -1,6 +1,7 @@
 <script setup>
 import ChatMessageLeft from "./ChatMessageLeft.vue";
 import ChatMessageRight from "./ChatMessageRight.vue";
+import ChatMessageNoti from "./ChatMessageNoti.vue";
 import { useChatStore } from "@/stores/chat";
 import { useUserStore } from "@/stores/user";
 import {
@@ -95,7 +96,8 @@ watch(chats, (n) => {
   <div :class="$style.chatView" ref="chatMain">
     <div ref="chatContent">
       <template v-for="item in chats" :key="item.index">
-        <ChatMessageRight v-if="item.uid === user.uid" :data="item" />
+        <ChatMessageNoti v-if="item?.type === 'theme'" :data="item" />
+        <ChatMessageRight v-else-if="item.uid === user.uid" :data="item" />
         <ChatMessageLeft v-else :data="item" />
       </template>
     </div>

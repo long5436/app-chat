@@ -33,8 +33,8 @@ const currentTheme = computed(() => appStore.getTheme);
       <div
         :class="$style.text"
         :style="{
-          background: currentTheme.left.bg,
-          color: currentTheme.left.color,
+          background: currentTheme?.left?.bg,
+          color: currentTheme?.left?.color,
         }"
       >
         <p>{{ data.content }}</p>

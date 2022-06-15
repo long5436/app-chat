@@ -49,9 +49,9 @@ const createAvtString = function (string) {
   if (string) {
     const arr = string.split(" ");
     const char1 = arr[0].charAt(0)?.toUpperCase();
-    const char2 = arr[1] ? arr[1].charAt(0)?.toUpperCase() : "";
+    // const char2 = arr[1] ? arr[1].charAt(0)?.toUpperCase() : "";
 
-    const str = char1 + char2;
+    const str = char1; //+ char2;
     return {
       name: str,
       color: generateColor(str.charAt(0)),

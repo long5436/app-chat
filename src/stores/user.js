@@ -25,8 +25,8 @@ export const useUserStore = defineStore({
       this.friendIds = [...[a.uid], ...ids];
 
       this.userinfo = {
-        username: a.displayName,
-        photo: a.photoURL,
+        displayName: a.displayName,
+        photoURL: a.photoURL,
         uid: a.uid,
         theme: a.theme,
       };

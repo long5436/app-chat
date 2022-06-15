@@ -63,7 +63,7 @@ function changePage(value) {
         <img
           v-if="getUser.photo"
           :class="$style.img"
-          :src="getUser.photo ? getUser.photo : userImg"
+          :src="getUser.photo ? getUser.photoURL : userImg"
           alt=""
         />
         <div
@@ -74,10 +74,10 @@ function changePage(value) {
             color: getUser.theme?.textColor,
           }"
         >
-          <span>{{ createAvtString(getUser.username).name }} </span>
+          <span>{{ createAvtString(getUser.displayName).name }} </span>
         </div>
         <span :class="$style.name">{{
-          getUser.username ? getUser.username : "username"
+          getUser.displayName ? getUser.displayName : "username"
         }}</span>
         <!-- <v-icon name="bi-chevron-down" :class="$style.icon" /> -->
       </div>

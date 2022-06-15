@@ -4,6 +4,7 @@ import audio from "@/assets/audio/Ding-Dong.mp3";
 import { formatTime } from "@/plugins/formatDate";
 import sortArray from "sort-objects-array";
 import { useUserStore } from "@/stores/user";
+import { useAppStore } from "@/stores/app";
 import { useChatStore } from "@/stores/chat";
 import { getUser, getChat } from "@/firebase/services";
 import {
@@ -27,12 +28,13 @@ import {
 //
 const userStore = useUserStore();
 const chatStore = useChatStore();
+const appStore = useAppStore();
 const currentChatId = ref("");
 
 const userInfo = computed(() => userStore.getUserinfo);
 const chatList = computed(() => chatStore.getChatList);
 const chatListSnapShot = reactive({ data: [], data2: [] });
-chatListSnapShot.data = chatList.value;
+// chatListSnapShot.data = chatList.value;
 
 function play() {
   // console.log("okasa");
@@ -43,7 +45,7 @@ function play() {
 watch(chatList, (newVal) => {
   console.log("da thay doi");
   chatListSnapShot.data2 = newVal;
-  // chatListSnapShot.data = newVal;
+  chatListSnapShot.data = newVal;
 
   chatListSnapShot.data2.forEach(async (e, index) => {
     console.log(e.id, index);
@@ -51,9 +53,8 @@ watch(chatList, (newVal) => {
     const q = query(collectionRef, where("chatId", "==", e.id));
     const querySnapshot = await getDocs(q);
 
-    let unsubscribe = onSnapshot(q, (querySnapshot) => {
+    onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach(async (document) => {
-        // console.log(document.data);
         const uid = document.get("chatData").pop()?.uid;
 
         if (uid != userInfo.value.uid) {
@@ -85,12 +86,13 @@ async function handleClick(data) {
   // console.log(chatStore);
   if (!chatStore.getChatContent(data.id)) {
     const chatContentData = await getChat(data.id);
-    // console.log(chatContentData);
+    // console.log(data);
     chatStore.addChatData(chatContentData);
   }
   // // console.log(data.chatData);
   // // chatStore.addChatData(data.chatData);
   chatStore.addCurrentChatUser(data);
+  appStore.setTheme(data.theme);
   currentChatId.value = data.friendInfo?.uid;
 }
 </script>
@@ -135,11 +137,15 @@ async function handleClick(data) {
       </div>
       <div :class="$style.content">
         <h3>{{ i.friendInfo?.displayName }}</h3>
-        <p :class="$style.message">{{ i.mess?.content }}</p>
+        <div style="display: flex">
+          <p :class="$style.message">{{ i.mess?.content }}</p>
+          <span v-if="i.mess">{{ formatTime(i.mess?.createdAt.seconds) }}</span>
+          <span v-else> . {{ formatTime(i.createdAt?.seconds) }}</span>
+        </div>
       </div>
-      <div :class="$style.info">
+      <div :class="$style.info" v-if="false">
         <span v-if="i.mess">{{ formatTime(i.mess?.createdAt.seconds) }}</span>
-        <span v-else>{{ formatTime(i.createdAt.seconds) }}</span>
+        <span v-else>{{ formatTime(i.createdAt?.seconds) }}</span>
         <span :class="$style.noti"> 12 </span>
       </div>
     </div>

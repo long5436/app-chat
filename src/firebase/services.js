@@ -22,13 +22,15 @@ const addDocument = async (collectionName, data) => {
     createdAt: serverTimestamp(),
   });
 
-  addDoc(collection(db, "messages"), {
-    chatId: data.id,
-    name: data.name,
-    chatData: [],
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
+  if (collectionName === "chats") {
+    addDoc(collection(db, "messages"), {
+      chatId: data.id,
+      name: data.name,
+      chatData: [],
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
 };
 
 const getChatDocument = async (currentUserUid, newUserUid) => {
@@ -167,6 +169,27 @@ const sendMessage = async (collectionName, currentChatId, message) => {
   });
 };
 
+const setTheme = async (chatId, theme) => {
+  // console.log(chatId, { ...theme, preview: false });
+
+  const add = async (document, data) => {
+    const documentRef = doc(db, "messages", document.id);
+    await updateDoc(documentRef, {
+      theme: { ...data, preview: false },
+      updatedAt: serverTimestamp(),
+    });
+  };
+
+  const collectionRef = collection(db, "messages");
+  const q = query(collectionRef, where("chatId", "==", chatId));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach(async (document) => {
+    // console.log(document.data());
+    add(document, theme);
+  });
+};
+
 export {
   addDocument,
   addFiend,
@@ -175,4 +198,5 @@ export {
   getChatLists,
   sendMessage,
   getChatDocument,
+  setTheme,
 };

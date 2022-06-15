@@ -25,6 +25,7 @@ const input = ref("");
 const textShow = ref("true");
 const showMic = ref("true");
 const enableSendBtn = ref("false");
+const sourceImg = ref("");
 
 function handleChange(event) {
   if (event.keyCode === 13) {
@@ -42,11 +43,13 @@ function handleKeyDown(event) {
   }
 }
 
-function submit(e) {
-  if (input.value) {
+function submit() {
+  if (sourceImg) {
+    sendImage();
+  } else if (input.value) {
     sendMessage("messages", currentChatId.value, {
-      displayName: userInfo.value.username,
-      photoURL: userInfo.value.photo,
+      displayName: userInfo.value.displayName,
+      photoURL: userInfo.value.photoURL,
       uid: userInfo.value.uid,
       content: input.value,
       createdAt: new Date(),
@@ -83,6 +86,73 @@ async function focus(status) {
 }
 //
 
+/*
+
+cloudinary.uploader.upload(`./src/public/img/${req.file.filename}`,
+            function (error, result) {
+            //   console.log(error);
+              if (error) res.send(error);
+              if (result) {
+                fs.unlinkSync(`./src/public/img/${req.file.filename}`);
+                // .resolve();
+                res.json({
+                  location: result.secure_url
+                  // location: `localhost:3000/images/${req.file.filename}`,
+                });
+              }
+            })
+
+*/
+
+let file;
+function selectImage() {
+  const el = proxy.$refs.selImg;
+  el.click();
+
+  el.addEventListener("change", (e) => {
+    file = el.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      sourceImg.value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function sendImage() {
+  cloudinary.uploader.upload(file, function (error, result) {
+    console.log(error);
+    console.log(result);
+    // if (error) res.send(error);
+    // if (result) {
+    //   fs.unlinkSync(`./src/public/img/${req.file.filename}`);
+    //   // .resolve();
+    //   res.json({
+    //     location: result.secure_url
+    //     // location: `localhost:3000/images/${req.file.filename}`,
+    //   });
+    // }
+  });
+}
+
+function removeImg() {
+  sourceImg.value = null;
+}
+
+watch(sourceImg, (n) => {
+  if (n) {
+    textShow.value = false;
+    showMic.value = false;
+    enableSendBtn.value = false;
+    focus(true);
+  } else {
+    textShow.value = true;
+    enableSendBtn.value = true;
+    showMic.value = true;
+    focus(false);
+  }
+});
+
 watch(input, (n) => {
   if (n.length > 0) {
     textShow.value = false;
@@ -106,6 +176,7 @@ watch(input, (n) => {
       </button>
       <div :class="$style.inputText">
         <p
+          v-if="!sourceImg"
           contenteditable="true"
           role="textbox"
           spellcheck="true"
@@ -117,8 +188,19 @@ watch(input, (n) => {
           ref="iput"
         ></p>
         <p v-if="textShow" :class="$style.text">Nội dung tin nhắn</p>
+        <div :class="$style.img" v-if="sourceImg" style="display: flex">
+          <div
+            :class="$style.imagePreviewWrapper"
+            :style="{ 'background-image': `url(${sourceImg})` }"
+          ></div>
+          <button @click="removeImg">x</button>
+        </div>
       </div>
       <div :class="$style.actions">
+        <button :class="$style.btn" @click="selectImage">
+          <v-icon name="bi-image" :class="$style.icon" />
+          <input type="file" ref="selImg" v-show="false" />
+        </button>
         <button :class="$style.btn">
           <v-icon name="fa-regular-smile" :class="$style.icon" />
         </button>
@@ -201,6 +283,21 @@ watch(input, (n) => {
         position: absolute;
         color: #888;
         top: 0;
+      }
+
+      .img {
+        .imagePreviewWrapper {
+          width: 200px;
+          height: 200px;
+          background-size: 100px 100px;
+          background-repeat: no-repeat;
+          background-position: left;
+        }
+
+        button {
+          width: 30px;
+          height: 30px;
+        }
       }
     }
 

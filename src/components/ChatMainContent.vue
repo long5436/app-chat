@@ -4,7 +4,10 @@ import InputChatForm from "./InputChat.vue";
 import ChatMainMenu from "./ChatMainMenu.vue";
 import ChatView from "./ChatView.vue";
 import createAvtString from "@/plugins/createAvtString";
+import Bg1 from "@/assets/img/bg-theme-1.png";
 import Bg from "@/assets/img/bg-theme-2.png";
+import Bg3 from "@/assets/img/bg-theme-3.jpg";
+import Bg4 from "@/assets/img/bg-theme-4.png";
 
 //
 import { useChatStore } from "@/stores/chat";
@@ -20,11 +23,21 @@ console.log(currentTheme);
 
 const background = computed(() => {
   console.log("da chat");
-  switch (currentTheme.value.id) {
+  console.log(currentTheme.value);
+  switch (currentTheme.value?.id) {
     case 0:
       return null;
+    case 1:
+      return `url(${Bg1})`;
+
     case 2:
       return `url(${Bg})`;
+    case 3:
+      return `url(${Bg3})`;
+    case 4:
+      return `url(${Bg4})`;
+    default:
+      return null;
   }
 });
 </script>
