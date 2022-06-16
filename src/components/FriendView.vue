@@ -11,8 +11,8 @@ import {
   orderBy,
 } from "@/firebase/config";
 
+import { addNotification } from "@/firebase/notification";
 import { limit } from "firebase/firestore";
-
 import { useUserStore } from "@/stores/user";
 import { addFiend } from "@/firebase/services";
 import createAvtString from "@/plugins/createAvtString";
@@ -61,7 +61,23 @@ async function handleAddfriend(user) {
   const currentUser = userStore.userinfo;
 
   // add friend to current user
-  addFiend("users", currentUser, newFriend);
+  // addFiend("users", currentUser, newFriend);
+  // test
+
+  const data = {
+    send: currentUser,
+    receive: {
+      displayName: newFriend.displayName,
+      photoURL: newFriend.photoURL,
+      uid: newFriend.uid,
+      theme: newFriend.theme,
+    },
+    message: `${currentUser.displayName} đã gửi đến bạn lời mời kết bạn`,
+    data: null,
+    uidReceive: newFriend.uid,
+    type: "addfriend",
+  };
+  addNotification(data);
 }
 </script>
 

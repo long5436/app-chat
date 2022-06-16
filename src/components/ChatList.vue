@@ -98,7 +98,7 @@ async function handleClick(data) {
 </script>
 
 <template>
-  <div :class="$style.action">
+  <div :class="$style.action" v-if="false">
     <button :class="[$style.btn, $style.btnActive]">
       <span> Tất cả </span>
     </button>
@@ -146,7 +146,7 @@ async function handleClick(data) {
       <div :class="$style.info" v-if="false">
         <span v-if="i.mess">{{ formatTime(i.mess?.createdAt.seconds) }}</span>
         <span v-else>{{ formatTime(i.createdAt?.seconds) }}</span>
-        <span :class="$style.noti"> 12 </span>
+        <span :class="$style.noti" v-if="false"> 12 </span>
       </div>
     </div>
   </div>

@@ -21,6 +21,11 @@ const router = createRouter({
       name: "friends",
       component: Friends,
     },
+    {
+      path: "/t/:id",
+      name: "chat",
+      component: Home,
+    },
   ],
 });
 

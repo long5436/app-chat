@@ -2,6 +2,7 @@
 import ChatMessageLeft from "./ChatMessageLeft.vue";
 import ChatMessageRight from "./ChatMessageRight.vue";
 import ChatMessageNoti from "./ChatMessageNoti.vue";
+import ChatMessageImage from "./ChatMessageImage.vue";
 import { useChatStore } from "@/stores/chat";
 import { useUserStore } from "@/stores/user";
 import {
@@ -96,7 +97,12 @@ watch(chats, (n) => {
   <div :class="$style.chatView" ref="chatMain">
     <div ref="chatContent">
       <template v-for="item in chats" :key="item.index">
-        <ChatMessageNoti v-if="item?.type === 'theme'" :data="item" />
+        <ChatMessageImage
+          v-if="item?.type === 'image'"
+          :huong="item.uid === user.uid ? 'right' : 'left'"
+          :data="item"
+        />
+        <ChatMessageNoti v-else-if="item?.type === 'theme'" :data="item" />
         <ChatMessageRight v-else-if="item.uid === user.uid" :data="item" />
         <ChatMessageLeft v-else :data="item" />
       </template>

@@ -19,5 +19,8 @@
   },
   "storage": {
     "rules": "storage.rules"
-  }
+  },
+  "rewrites": [
+    { "source": "/api/myFunction", "function": "doStuff" }
+]
 }

@@ -13,8 +13,10 @@ import {
   getDocs,
   where,
   updateDoc,
+  storage,
 } from "@/firebase/config";
 
+import { uploadImage } from "@/firebase/uploadImage";
 //
 const chatStore = useChatStore();
 const userStore = useUserStore();
@@ -44,7 +46,7 @@ function handleKeyDown(event) {
 }
 
 function submit() {
-  if (sourceImg) {
+  if (sourceImg.value) {
     sendImage();
   } else if (input.value) {
     sendMessage("messages", currentChatId.value, {
@@ -63,47 +65,6 @@ function submit() {
   }
 }
 
-// import { getDatabase, ref, runTransaction } from "firebase/database";
-async function focus(status) {
-  // const collectionRef = collection(db, "messages");
-  // const q = query(
-  //   collectionRef,
-  //   where(
-  //     "chatId",
-  //     "==",
-  //     "2RbRxEfv37gI1yqsmzZSJfDFTS8tOWjfkRrN7ZHhfgzZh1nwpC3FUwoC"
-  //   )
-  // );
-  // const querySnapshot = await getDocs(q);
-  // querySnapshot.forEach(async (document) => {
-  //   await updateDoc(collectionRef, { typing: arrayUnion("balabal") });
-  // });
-  // if (status) {
-  //   console.log("ok");
-  // } else {
-  //   console.log("not ok");
-  // }
-}
-//
-
-/*
-
-cloudinary.uploader.upload(`./src/public/img/${req.file.filename}`,
-            function (error, result) {
-            //   console.log(error);
-              if (error) res.send(error);
-              if (result) {
-                fs.unlinkSync(`./src/public/img/${req.file.filename}`);
-                // .resolve();
-                res.json({
-                  location: result.secure_url
-                  // location: `localhost:3000/images/${req.file.filename}`,
-                });
-              }
-            })
-
-*/
-
 let file;
 function selectImage() {
   const el = proxy.$refs.selImg;
@@ -119,24 +80,29 @@ function selectImage() {
   });
 }
 
-function sendImage() {
-  cloudinary.uploader.upload(file, function (error, result) {
-    console.log(error);
-    console.log(result);
-    // if (error) res.send(error);
-    // if (result) {
-    //   fs.unlinkSync(`./src/public/img/${req.file.filename}`);
-    //   // .resolve();
-    //   res.json({
-    //     location: result.secure_url
-    //     // location: `localhost:3000/images/${req.file.filename}`,
-    //   });
-    // }
+async function sendImage() {
+  console.log(sourceImg);
+  const url = await uploadImage(file);
+
+  sendMessage("messages", currentChatId.value, {
+    displayName: userInfo.value.displayName,
+    photoURL: userInfo.value.photoURL,
+    uid: userInfo.value.uid,
+    content: `${userInfo.value.displayName} đã gửi một ảnh`,
+    createdAt: new Date(),
+    type: "image",
+    imageURL: url,
+    theme: userInfo.value.theme,
   });
+
+  removeImg();
 }
 
 function removeImg() {
   sourceImg.value = null;
+  const storageRef = ref(storage, "some-child");
+
+  // 'file' comes from the Blob or File API
 }
 
 watch(sourceImg, (n) => {

@@ -10,6 +10,7 @@ import {
   computed,
   watch,
   onMounted,
+  ref,
 } from "vue";
 import {
   db,
@@ -20,18 +21,41 @@ import {
   collection,
   query,
   where,
+  auth,
+  onAuthStateChanged,
 } from "@/firebase/config";
+import { useRouter } from "vue-router";
 //
+const router = useRouter();
 const chatStore = useChatStore();
 const userStore = useUserStore();
 const userApp = useAppStore();
 const userInfo = computed(() => userStore.getUserinfo);
 const userId = computed(() => userInfo.value.uid);
 const chatList = reactive({ data: [] });
+const login = ref(false);
 
 chatStore.$reset();
 userStore.$reset();
 userApp.$reset();
+
+// kiem tra trang thai dang nhap
+
+watchEffect(() => {
+  onAuthStateChanged(auth, (user) => {
+    console.log(user);
+    if (!user) {
+      router.push({ path: "/login" });
+      login.value = false;
+    } else {
+      // set user info to state
+      console.log("da dang nhap");
+      login.value = true;
+      router.push({ path: "/" });
+      userStore.setUserInfo(user);
+    }
+  });
+});
 
 // async function getChatListsUser() {
 //   if (userInfo.value.uid) {
@@ -82,37 +106,39 @@ userApp.$reset();
 // sua loi goi lay list chat nhieu lan
 async function getChatListChat() {
   watch(userId, async (uid) => {
-    const collectionRef = collection(db, "chats");
-    const q = query(collectionRef, where("members", "array-contains", uid));
-    const querySnapshot = await getDocs(q);
+    if (uid) {
+      const collectionRef = collection(db, "chats");
+      const q = query(collectionRef, where("members", "array-contains", uid));
+      const querySnapshot = await getDocs(q);
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      watch(userInfo, () => {
-        console.log("da unsubscribe list chat");
-        unsubscribe();
-        getChatListChat();
-      });
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        watch(userInfo, () => {
+          console.log("da unsubscribe list chat");
+          unsubscribe();
+          getChatListChat();
+        });
 
-      let newData = [];
-      querySnapshot.forEach(async (document) => {
-        newData.push(document.data());
-        // console.log(document.data());
-        // return document.data();
-      });
-      // console.log(newData);
-      chatList.data = newData;
+        let newData = [];
+        querySnapshot.forEach(async (document) => {
+          newData.push(document.data());
+          // console.log(document.data());
+          // return document.data();
+        });
+        // console.log(newData);
+        chatList.data = newData;
 
-      chatList.data.forEach(async (user) => {
-        const uid = user.members.find((mem) => mem !== userInfo.value.uid);
-        // console.log(uid);
-        const res = await getUser("users", uid);
-        userStore.addUser(res);
-        user.friendInfo = res;
-        // console.log(user);
-        // console.log(chatList.data);
-        console.log("da cap nhat chat list");
+        chatList.data.forEach(async (user) => {
+          const uid = user.members.find((mem) => mem !== userInfo.value.uid);
+          // console.log(uid);
+          const res = await getUser("users", uid);
+          userStore.addUser(res);
+          user.friendInfo = res;
+          // console.log(user);
+          // console.log(chatList.data);
+          console.log("da cap nhat chat list");
+        });
       });
-    });
+    }
   });
 
   // const collectionRef = collection(db, "chats");
