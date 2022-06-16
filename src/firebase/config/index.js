@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
 import {
   getAuth,
   FacebookAuthProvider,
@@ -30,6 +31,7 @@ import {
   orderBy,
   increment,
   arrayUnion,
+  deleteDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -47,16 +49,17 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // local
 connectAuthEmulator(auth, "http://localhost:9099");
 if (window.location.hostname === "localhost") {
   connectFirestoreEmulator(db, "localhost", 8080);
+  connectStorageEmulator(storage, "localhost", 9199);
 }
 
 const facebookProvider = new FacebookAuthProvider();
 const googleProvider = new GoogleAuthProvider();
-
 export {
   db,
   doc,
@@ -83,5 +86,7 @@ export {
   updateDoc,
   orderBy,
   increment,
+  deleteDoc,
   arrayUnion,
+  storage,
 };

@@ -10,6 +10,7 @@ import {
   computed,
   watch,
   onMounted,
+  ref,
 } from "vue";
 import {
   db,
@@ -20,17 +21,41 @@ import {
   collection,
   query,
   where,
+  auth,
+  onAuthStateChanged,
 } from "@/firebase/config";
+import { useRouter } from "vue-router";
 //
+const router = useRouter();
 const chatStore = useChatStore();
 const userStore = useUserStore();
 const userApp = useAppStore();
 const userInfo = computed(() => userStore.getUserinfo);
+const userId = computed(() => userInfo.value.uid);
 const chatList = reactive({ data: [] });
+const login = ref(false);
 
 chatStore.$reset();
 userStore.$reset();
 userApp.$reset();
+
+// kiem tra trang thai dang nhap
+
+watchEffect(() => {
+  onAuthStateChanged(auth, (user) => {
+    console.log(user);
+    if (!user) {
+      router.push({ path: "/login" });
+      login.value = false;
+    } else {
+      // set user info to state
+      console.log("da dang nhap");
+      login.value = true;
+      router.push({ path: "/" });
+      userStore.setUserInfo(user);
+    }
+  });
+});
 
 // async function getChatListsUser() {
 //   if (userInfo.value.uid) {
@@ -45,44 +70,116 @@ userApp.$reset();
 //   }
 // }
 
-watchEffect(async () => {
-  if (userInfo.value.uid) {
-    const collectionRef = collection(db, "chats");
-    const q = query(
-      collectionRef,
-      where("members", "array-contains", userInfo.value.uid)
-    );
-    const querySnapshot = await getDocs(q);
-    let data = [];
+// watchEffect(async () => {
+//   if (userInfo.value.uid) {
+//     const collectionRef = collection(db, "chats");
+//     const q = query(
+//       collectionRef,
+//       where("members", "array-contains", userInfo.value.uid)
+//     );
+//     const querySnapshot = await getDocs(q);
+//     let data = [];
 
-    onSnapshot(q, (querySnapshot) => {
-      let newData = [];
-      querySnapshot.forEach(async (document) => {
-        newData.push(document.data());
-        // return document.data();
-      });
-      // console.log(newData);
-      chatList.data = newData;
+//     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+//       let newData = [];
+//       querySnapshot.forEach(async (document) => {
+//         newData.push(document.data());
+//         // return document.data();
+//       });
+//       // console.log(newData);
+//       chatList.data = newData;
 
-      chatList.data.forEach(async (user) => {
-        const uid = user.members.find((mem) => mem !== userInfo.value.uid);
-        // console.log(uid);
-        const res = await getUser("users", uid);
-        userStore.addUser(res);
-        user.friendInfo = res;
-        // console.log(user);
-        // console.log(chatList.data);
+//       chatList.data.forEach(async (user) => {
+//         const uid = user.members.find((mem) => mem !== userInfo.value.uid);
+//         // console.log(uid);
+//         const res = await getUser("users", uid);
+//         userStore.addUser(res);
+//         user.friendInfo = res;
+//         // console.log(user);
+//         // console.log(chatList.data);
+//         console.log("da cap nhat chat list");
+//       });
+//     });
+//   }
+// });
+
+// sua loi goi lay list chat nhieu lan
+async function getChatListChat() {
+  watch(userId, async (uid) => {
+    if (uid) {
+      const collectionRef = collection(db, "chats");
+      const q = query(collectionRef, where("members", "array-contains", uid));
+      const querySnapshot = await getDocs(q);
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        watch(userInfo, () => {
+          console.log("da unsubscribe list chat");
+          unsubscribe();
+          getChatListChat();
+        });
+
+        let newData = [];
+        querySnapshot.forEach(async (document) => {
+          newData.push(document.data());
+          // console.log(document.data());
+          // return document.data();
+        });
+        // console.log(newData);
+        chatList.data = newData;
+
+        chatList.data.forEach(async (user) => {
+          const uid = user.members.find((mem) => mem !== userInfo.value.uid);
+          // console.log(uid);
+          const res = await getUser("users", uid);
+          userStore.addUser(res);
+          user.friendInfo = res;
+          // console.log(user);
+          // console.log(chatList.data);
+          console.log("da cap nhat chat list");
+        });
       });
-      // data = newData;
-      // console.log("chay roi");
-      // console.log(data);
-    });
-  }
-});
+    }
+  });
+
+  // const collectionRef = collection(db, "chats");
+  // const q = query(collectionRef, where("members", "array-contains", userId.value));
+  // const querySnapshot = await getDocs(q);
+
+  // console.log(querySnapshot);
+
+  // const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //   watch(userInfo, () => {
+  //     console.log("da unsubscribe list chat");
+  //     unsubscribe();
+  //     getChatListChat();
+  //   });
+
+  //   let newData = [];
+  //   querySnapshot.forEach(async (document) => {
+  //     newData.push(document.data());
+  //     console.log(document.data());
+  //     // return document.data();
+  //   });
+  //   // console.log(newData);
+  //   chatList.data = newData;
+
+  //   chatList.data.forEach(async (user) => {
+  //     const uid = user.members.find((mem) => mem !== userInfo.value.uid);
+  //     // console.log(uid);
+  //     const res = await getUser("users", uid);
+  //     userStore.addUser(res);
+  //     user.friendInfo = res;
+  //     // console.log(user);
+  //     // console.log(chatList.data);
+  //     console.log("da cap nhat chat list");
+  //   });
+  // });
+}
+
+getChatListChat(); // goi lan dau
 
 //
 watch(userInfo, (n) => {
-  console.log(n);
   getUserFriends();
 });
 
@@ -98,11 +195,18 @@ async function getUserFriends() {
     const querySnapshot = await getDocs(q);
 
     const friends = { data: [] };
-    onSnapshot(q, (querySnapshot) => {
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      watch(userInfo, () => {
+        console.log("da huy list friend");
+        unsubscribe();
+        getUserFriends();
+      });
+
       querySnapshot.forEach(async (document) => {
         // console.log(document.data());
         //   friends.data = document.data();
         userApp.addListFriend(document.data().friends);
+        console.log("Da cap nhat list friend");
       });
     });
   }
@@ -141,15 +245,44 @@ getUserFriends();
 const currentChatId = computed(() => chatStore.getCurrentChatId);
 // console.log(currentChatId.value);
 
-watchEffect(async () => {
+// watchEffect(async () => {
+//   const ff = collection(db, "messages");
+//   const ee = query(ff, where("chatId", "==", currentChatId.value));
+//   const eee = await getDocs(ee);
+
+//   let unsubscribe = onSnapshot(ee, (eee) => {
+//     watch(currentChatId, (n) => {
+//       // console.log("da unsubscribe");
+//       unsubscribe();
+//     });
+
+//     // let mess
+//     eee.forEach(async (document) => {
+//       // console.log("--------------------------------");
+//       // console.log(document.get("chatData")?.pop());
+//       const pop = document.get("chatData")?.pop();
+//       const chatId = document.get("chatId");
+//       // console.log(pop?.createdAt);
+//       // console.log(currentChatId.value);
+//       // console.log("theo doi tin nhan hard code trong AppProvider");
+//       chatStore.addChatDataContent({ chatId, pop });
+//       //   friends.data = document.data();
+//     });
+//   });
+// });
+
+// fix snapshot lai nhieu lan khong mong muon
+async function watchChatModify() {
   const ff = collection(db, "messages");
   const ee = query(ff, where("chatId", "==", currentChatId.value));
   const eee = await getDocs(ee);
 
   let unsubscribe = onSnapshot(ee, (eee) => {
     watch(currentChatId, (n) => {
-      // console.log("da unsubscribe");
+      console.log("da unsubscribe watch chat");
+      console.log("da watch lai chat ");
       unsubscribe();
+      watchChatModify();
     });
 
     // let mess
@@ -158,23 +291,19 @@ watchEffect(async () => {
       // console.log(document.get("chatData")?.pop());
       const pop = document.get("chatData")?.pop();
       const chatId = document.get("chatId");
+      const theme = document.get("theme");
       // console.log(pop?.createdAt);
       // console.log(currentChatId.value);
       // console.log("theo doi tin nhan hard code trong AppProvider");
       chatStore.addChatDataContent({ chatId, pop });
+      userApp.setTheme(theme);
       //   friends.data = document.data();
     });
   });
-});
+}
 
-//
-const a = async () => {};
-//
-
-// import { getMessaging } from "firebase/messaging/sw";
-// const messaging = getMessaging(firebaseApp);
-
-// test();
+// goi lan dau khi khoi chay
+watchChatModify();
 </script>
 <template>
   <slot></slot>

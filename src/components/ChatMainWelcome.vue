@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from "vue";
 import { useUserStore } from "@/stores/user";
-import VueDisplacementSlideshow from "vue-displacement-slideshow";
 import img1 from "@/assets/img/live_chat.png";
 //
 const userStore = useUserStore();

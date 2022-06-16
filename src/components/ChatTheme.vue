@@ -1,14 +1,21 @@
 <script setup>
 import { watch, reactive, ref, computed } from "vue";
+import { setTheme, sendMessage } from "@/firebase/services";
 import Theme1 from "@/assets/img/theme1.jpg";
 import Theme2 from "@/assets/img/theme2.jpg";
 import Theme3 from "@/assets/img/theme3.jpg";
 import Theme4 from "@/assets/img/theme4.jpg";
 import DefaultImg from "@/assets/img/default.png";
 import { useAppStore } from "@/stores/app";
+import { useChatStore } from "@/stores/chat";
+import { useUserStore } from "@/stores/user";
 
 //
 const appStore = useAppStore();
+const chatStore = useChatStore();
+const userStore = useUserStore();
+const chatId = computed(() => chatStore.getCurrentChatId);
+const userInfo = computed(() => userStore.getUserinfo);
 const themes = reactive({
   data: [
     {
@@ -25,8 +32,10 @@ const themes = reactive({
       background: "",
     },
     {
+      id: 1,
       name: "Cầu vòng",
-      color: `linear-gradient(
+      right: {
+        bg: `linear-gradient(
           to bottom,
           #ff2618,
           #ff5907,
@@ -36,15 +45,20 @@ const themes = reactive({
           #02b891,
           #367fe5,
           #8a39ef
-        )`,
+        ) fixed`,
+        color: `#fff`,
+      },
+      left: {
+        bg: "#E4E6EB",
+        color: "#000",
+      },
       background: "",
-      avt: "theme1",
     },
     {
       id: 2,
       name: "Tình yêu",
       right: {
-        bg: "#FB1F71",
+        bg: "#ff228c",
         color: "#fff",
       },
       left: {
@@ -55,36 +69,38 @@ const themes = reactive({
       preview: true,
     },
     {
+      id: 3,
       name: "Bầu trời",
-      color: `linear-gradient(
+      right: {
+        bg: `linear-gradient(
           to bottom,
-          #ff2618,
-          #ff5907,
-          #ffa001,
-          #c0c60b,
-          #9fc611,
-          #02b891,
-          #367fe5,
-          #8a39ef
-        )`,
+         #bc58fb, #c399ff, #8bc4ff
+        ) fixed`,
+        color: "#fff",
+      },
+      left: {
+        bg: "#FFF5F5",
+        color: "#000",
+      },
       background: "",
-      avt: "theme1",
+      preview: true,
     },
     {
+      id: 4,
       name: "Thư giãn",
-      color: `linear-gradient(
+      right: {
+        bg: `linear-gradient(
           to bottom,
-          #ff2618,
-          #ff5907,
-          #ffa001,
-          #c0c60b,
-          #9fc611,
-          #02b891,
-          #367fe5,
-          #8a39ef
-        )`,
+         #189fff, #ff5907, #01a4ff, #c0c60b, #8a39ef
+        ) fixed`,
+        color: "#fff",
+      },
+      left: {
+        bg: "#FFF5F5",
+        color: "#000",
+      },
       background: "",
-      avt: "theme1",
+      preview: true,
     },
   ],
 });
@@ -95,6 +111,23 @@ const emit = defineEmits(["close"]);
 const currentTheme = reactive({ data: {} });
 
 //
+
+function setChatTheme() {
+  setTheme(chatId.value, themes.data[themeSelected.value]);
+  currentTheme.data = themes.data[themeSelected.value];
+
+  sendMessage("messages", chatId.value, {
+    displayName: userInfo.value.displayName,
+    uid: userInfo.value.uid,
+    createdAt: new Date(),
+    type: "theme",
+    content: `${userInfo.value.displayName} đã thay đổi chủ đề thành ${
+      themes.data[themeSelected.value].name
+    }`,
+    themeName: themes.data[themeSelected.value].name,
+  });
+}
+
 function selectTheme(index) {
   if (index === themeSelected.value) {
     themeSelected.value = undefined;
@@ -103,7 +136,7 @@ function selectTheme(index) {
   }
 
   const currentThemFromStore = appStore.theme;
-  if (!currentThemFromStore.preview) {
+  if (!currentThemFromStore?.preview) {
     currentTheme.data = currentThemFromStore;
   }
 
@@ -143,7 +176,11 @@ function closeWindow() {
     </div>
     <div :class="$style.actions">
       <button :class="$style.btn" @click="closeWindow">Huỷ</button>
-      <button :class="$style.btn" :disabled="themeSelected === undefined">
+      <button
+        :class="$style.btn"
+        :disabled="themeSelected === undefined"
+        @click="setChatTheme"
+      >
         Lưu
       </button>
     </div>

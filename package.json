@@ -15,10 +15,10 @@
     "sort-objects-array": "^1.7.1",
     "uniqid": "^5.4.0",
     "unique-objects": "^1.0.5",
+    "uuid": "^8.3.2",
     "vue": "^3.2.33",
-    "vue-displacement-slideshow": "^4.0.0",
     "vue-router": "^4.0.14",
-    "vue3-carousel": "^0.1.40"
+    "vue3-photo-preview": "^0.2.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.1",

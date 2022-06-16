@@ -8,6 +8,7 @@ import { reactive, ref, computed, watch, watchEffect } from "vue";
 import { auth, signOut, db, collection, onSnapshot } from "../firebase/config";
 import userImg from "@/assets/img/user.webp";
 import createAvtString from "@/plugins/createAvtString";
+import Notifications from "./Notifications.vue";
 // import { isActive, isExactActive } from "vue-router";
 
 //
@@ -16,7 +17,8 @@ const appStore = useAppStore();
 const chatStore = useChatStore();
 const router = useRouter();
 const userInf = reactive({});
-
+const openNoti = ref(false);
+const countNoti = ref(0);
 //
 const getUser = computed(() => {
   return userStore.getUserinfo;
@@ -54,6 +56,15 @@ function changePage(value) {
     router.push({ path: "/" });
   }
 }
+
+function handleOpenNoti() {
+  openNoti.value = !openNoti.value;
+}
+
+function setCountNoti(data) {
+  // console.log(data);
+  countNoti.value = data;
+}
 </script>
 
 <template>
@@ -63,7 +74,7 @@ function changePage(value) {
         <img
           v-if="getUser.photo"
           :class="$style.img"
-          :src="getUser.photo ? getUser.photo : userImg"
+          :src="getUser.photo ? getUser.photoURL : userImg"
           alt=""
         />
         <div
@@ -74,10 +85,10 @@ function changePage(value) {
             color: getUser.theme?.textColor,
           }"
         >
-          <span>{{ createAvtString(getUser.username).name }} </span>
+          <span>{{ createAvtString(getUser.displayName).name }} </span>
         </div>
         <span :class="$style.name">{{
-          getUser.username ? getUser.username : "username"
+          getUser.displayName ? getUser.displayName : "username"
         }}</span>
         <!-- <v-icon name="bi-chevron-down" :class="$style.icon" /> -->
       </div>
@@ -105,7 +116,7 @@ function changePage(value) {
         >
           <v-icon name="io-chatbubble-ellipses-outline" :class="$style.icon" />
           <span>Tin nhắn</span>
-          <span :class="$style.noti">6</span>
+          <span :class="$style.noti" v-show="false">6</span>
         </router-link>
 
         <router-link
@@ -117,9 +128,15 @@ function changePage(value) {
           <span>Bạn bè</span>
         </router-link>
 
-        <button :class="[$style.btn, { [$style.btnActive]: false }]">
+        <button
+          :class="[$style.btn, { [$style.btnActive]: openNoti }]"
+          @click="handleOpenNoti"
+        >
           <v-icon name="io-notifications-outline" :class="$style.icon" />
           <span>Thông báo</span>
+          <span :class="$style.noti" v-show="countNoti > 0">{{
+            countNoti
+          }}</span>
         </button>
       </div>
       <div>
@@ -131,6 +148,9 @@ function changePage(value) {
           <v-icon name="hi-logout" :class="$style.icon" />
           <span>Đăng xuất</span>
         </button>
+      </div>
+      <div :class="$style.notiModal">
+        <Notifications v-show="openNoti" @count="setCountNoti" />
       </div>
     </div>
   </header>
@@ -228,6 +248,15 @@ function changePage(value) {
     border: 1px solid #ddd;
     background: #fff;
     border-radius: 6px;
+  }
+
+  .notiModal {
+    position: absolute;
+    z-index: 1;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    // background: #000;
   }
 }
 </style>

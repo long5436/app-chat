@@ -22,13 +22,15 @@ const addDocument = async (collectionName, data) => {
     createdAt: serverTimestamp(),
   });
 
-  addDoc(collection(db, "messages"), {
-    chatId: data.id,
-    name: data.name,
-    chatData: [],
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
+  if (collectionName === "chats") {
+    addDoc(collection(db, "messages"), {
+      chatId: data.id,
+      name: data.name,
+      chatData: [],
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
 };
 
 const getChatDocument = async (currentUserUid, newUserUid) => {
@@ -52,11 +54,14 @@ const getChatDocument = async (currentUserUid, newUserUid) => {
 };
 
 const addFiend = async (collectionName, currentUser, newFriend) => {
-  console.log(newFriend);
+  console.log({ collectionName, currentUser, newFriend });
 
   const add = async (document, data) => {
-    const documentRef = doc(db, "users", document.id);
-    await updateDoc(documentRef, { friends: arrayUnion(data) });
+    console.log(document, data);
+    if (data) {
+      const documentRef = doc(db, "users", document.id);
+      await updateDoc(documentRef, { friends: arrayUnion(data) });
+    }
   };
 
   const collectionRef = collection(db, collectionName);
@@ -77,10 +82,13 @@ const addFiend = async (collectionName, currentUser, newFriend) => {
   const q2 = query(collectionRef, where("uid", "==", newFriend.uid));
   const querySnapshot2 = await getDocs(q2);
 
+  console.log("da chay den day");
+
   querySnapshot2.forEach(async (document) => {
+    console.log(newFriend);
     add(document, {
-      displayName: currentUser.username,
-      photoURL: currentUser.photo,
+      displayName: currentUser.displayName,
+      photoURL: currentUser.photoURL,
       uid: currentUser.uid,
       theme: currentUser.theme,
     });
@@ -167,6 +175,27 @@ const sendMessage = async (collectionName, currentChatId, message) => {
   });
 };
 
+const setTheme = async (chatId, theme) => {
+  // console.log(chatId, { ...theme, preview: false });
+
+  const add = async (document, data) => {
+    const documentRef = doc(db, "messages", document.id);
+    await updateDoc(documentRef, {
+      theme: { ...data, preview: false },
+      updatedAt: serverTimestamp(),
+    });
+  };
+
+  const collectionRef = collection(db, "messages");
+  const q = query(collectionRef, where("chatId", "==", chatId));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach(async (document) => {
+    // console.log(document.data());
+    add(document, theme);
+  });
+};
+
 export {
   addDocument,
   addFiend,
@@ -175,4 +204,5 @@ export {
   getChatLists,
   sendMessage,
   getChatDocument,
+  setTheme,
 };

@@ -18,18 +18,20 @@ export const useUserStore = defineStore({
   actions: {
     async setUserInfo(data) {
       // console.log(data);
-      const a = await getUser("users", data.uid);
+      if (data) {
+        const a = await getUser("users", data.uid);
 
-      const ids = a.friends.map((e) => e.uid);
+        const ids = a.friends.map((e) => e.uid);
 
-      this.friendIds = [...[a.uid], ...ids];
+        this.friendIds = [...[a.uid], ...ids];
 
-      this.userinfo = {
-        username: a.displayName,
-        photo: a.photoURL,
-        uid: a.uid,
-        theme: a.theme,
-      };
+        this.userinfo = {
+          displayName: a.displayName,
+          photoURL: a.photoURL,
+          uid: a.uid,
+          theme: a.theme,
+        };
+      }
     },
 
     addUser(user) {
