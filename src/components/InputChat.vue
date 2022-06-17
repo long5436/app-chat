@@ -180,20 +180,23 @@ watch(input, (n) => {
 <style lang="scss" module>
 .box {
   display: flex;
+  align-items: center;
   width: 100%;
   background: #e6e5e6;
   border-radius: 10px;
   padding: 4px;
   background: rgba(215, 215, 215, 0.219);
   backdrop-filter: blur(20px);
+  box-shadow: 0 0 10px 2px rgb(0 0 0 / 8%);
+  border: 1px solid #cccccc36;
 
   transition: 0.3s;
   .mic {
     border: 0;
     background: transparent;
     .icon {
-      width: 30px;
-      height: 30px;
+      width: 26px;
+      height: 26px;
       color: #777;
     }
 
@@ -217,7 +220,7 @@ watch(input, (n) => {
     // height: 40px;
     // background: #fff;
     display: flex;
-    // align-items: center;
+    align-items: center;
     flex-wrap: wrap;
     justify-content: space-between;
     // flex-direction: row-reverse;
@@ -270,7 +273,7 @@ watch(input, (n) => {
     // text-align: right;
 
     .actions {
-      height: 40px;
+      height: 36px;
       display: flex;
       align-items: center;
 
@@ -278,8 +281,8 @@ watch(input, (n) => {
         border: 0;
         background: none;
         .icon {
-          width: 28px;
-          height: 28px;
+          width: 22px;
+          height: 22px;
           color: #888;
         }
       }
@@ -287,19 +290,19 @@ watch(input, (n) => {
   }
 
   .sendBtn {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50em;
     border: 0;
     color: #888;
-    margin-left: 10px;
+    // margin-left: 10px;
     // background: #ec542a2f;
     background: transparent;
     display: flex;
     align-items: center;
     .icon {
-      width: 24px;
-      height: 24px;
+      width: 20px;
+      height: 20px;
       color: #ec532a;
     }
   }

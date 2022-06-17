@@ -35,7 +35,7 @@ export const useChatStore = defineStore({
 
     addChatDataContent(data) {
       // const newMessage = data.chatData.pop();
-      console.log(data);
+      // console.log(data);
 
       if (data) {
         this.chatListContent.find((chat, index) => {

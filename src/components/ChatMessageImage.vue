@@ -21,11 +21,17 @@ const propData = computed(() => {
   return props.data;
 });
 
+url.value = propData.value.imageURL;
+
+watch(propData, (n) => {
+  // console.log(n);
+  url.value = n.imageURL;
+});
 // methods
-function showPreview(imgUrl) {
-  url.value = imgUrl;
-  // console.log(url.value);
-}
+// function showPreview(imgUrl) {
+//   url.value = imgUrl;
+//   // console.log(url.value);
+// }
 </script>
 
 <template>
@@ -50,22 +56,15 @@ function showPreview(imgUrl) {
       </div>
     </div>
     <div :class="$style.item">
-      <img
-        :class="$style.img"
-        :src="data?.imageURL"
-        alt=""
-        @click="showPreview(data.imageURL)"
-      />
+      <img :class="$style.img" :src="data?.imageURL" alt="" />
       <p :class="$style.time">
         <v-icon name="bi-check-all" fill="green" />
         <span>{{ formatDate(data.createdAt?.seconds) }} </span>
       </p>
+      <ViewBox :src="data.imageURL" />
     </div>
   </div>
   <!-- { [$style.enable]: url } -->
-  <div :class="[$style.preview]">
-    <ViewBox :src="url" />
-  </div>
 </template>
 
 <style lang="scss" module>
@@ -96,6 +95,7 @@ function showPreview(imgUrl) {
   .item {
     width: 30%;
     cursor: pointer;
+    position: relative;
     .img {
       width: 100%;
       height: auto;

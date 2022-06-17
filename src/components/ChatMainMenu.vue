@@ -27,7 +27,7 @@ function showThemeWindow() {
         <v-icon name="fa-video" :class="$style.icon" />
       </button>
       <button :class="$style.btn">
-        <v-icon name="ri-search-2-line" :class="$style.icon" />
+        <v-icon name="ri-search-line" :class="$style.icon" />
       </button>
       <button
         :class="[$style.btn, { [$style.btnActive]: menu }]"
@@ -97,8 +97,8 @@ function showThemeWindow() {
     background: transparent;
 
     .icon {
-      width: 30px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       color: #777;
     }
 

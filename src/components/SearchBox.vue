@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent :class="$style.form">
-    <v-icon name="ri-search-2-line" :class="$style.icon" />
+    <v-icon name="ri-search-line" :class="$style.icon" />
     <input :class="$style.input" type="text" placeholder="Tìm kiếm" />
   </form>
 </template>

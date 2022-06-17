@@ -14,5 +14,6 @@ import ChatList from "./ChatList.vue";
 <style lang="scss" module>
 .heading {
   padding: 0 20px;
+  font-size: 1.05rem;
 }
 </style>

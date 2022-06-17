@@ -158,7 +158,7 @@ function setCountNoti(data) {
 <style lang="scss" module>
 .header {
   width: 100%;
-  height: 50px;
+  height: 40px;
   background: var(--background);
   border-bottom: 1px solid #ddd;
 

@@ -15,19 +15,15 @@ const dataFrom = reactive({ email: "", password: "" });
 
 // methods
 
-function submitLogin() {
+async function submitLogin() {
   // console.log(dataFrom);
-  signInWithEmailAndPassword(auth, dataFrom.email, dataFrom.password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ..
-    });
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    dataFrom.email,
+    dataFrom.password
+  );
+  console.log(userCredential);
+  const user = userCredential.user;
 }
 
 function changePasswordHide() {
@@ -65,8 +61,8 @@ function changePasswordHide() {
       </button>
     </div>
     <div :class="$style.forgetPass">
-      <router-link :class="$style.link" :to="{ path: '/' }">
-        Quên mật khẩu
+      <router-link :class="$style.link" :to="{ path: '/register' }">
+        chưa có tài khoản? Đăng ký ngay
       </router-link>
     </div>
     <button :class="$style.btnSubmit" @click="submitLogin">Đăng nhập</button>

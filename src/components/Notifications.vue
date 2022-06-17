@@ -74,7 +74,7 @@ function acceptFriend(data) {
 }
 
 watch(userInfo, (n) => {
-  console.log(n);
+  // console.log(n);
   getNotifications(); // goi lan dau
 });
 
