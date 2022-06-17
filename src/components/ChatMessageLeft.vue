@@ -82,7 +82,7 @@ const currentTheme = computed(() => appStore.getTheme);
 
       p {
         word-break: break-all;
-        font-size: 1.1rem;
+        // font-size: 1.1rem;
       }
     }
     .time {

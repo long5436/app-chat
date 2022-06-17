@@ -43,7 +43,7 @@ userApp.$reset();
 
 watchEffect(() => {
   onAuthStateChanged(auth, (user) => {
-    console.log(user);
+    // console.log(user);
     if (!user) {
       router.push({ path: "/login" });
       login.value = false;
@@ -51,8 +51,8 @@ watchEffect(() => {
       // set user info to state
       console.log("da dang nhap");
       login.value = true;
-      router.push({ path: "/" });
       userStore.setUserInfo(user);
+      router.push({ path: "/" });
     }
   });
 });

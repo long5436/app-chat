@@ -19,11 +19,9 @@ const currentChatUser = computed(() => chatStore.getCurrentChatUser);
 
 //
 const currentTheme = computed(() => appStore.getTheme);
-console.log(currentTheme);
+// console.log(currentTheme);
 
 const background = computed(() => {
-  console.log("da chat");
-  console.log(currentTheme.value);
   switch (currentTheme.value?.id) {
     case 0:
       return null;
@@ -66,9 +64,9 @@ const background = computed(() => {
                 createAvtString(currentChatUser.displayName).name
               }}</span>
             </div>
-            <h2 :class="$style.username">
+            <h3 :class="$style.username">
               {{ currentChatUser.displayName }}
-            </h2>
+            </h3>
           </div>
         </div>
         <div>
@@ -111,7 +109,7 @@ const background = computed(() => {
 .header {
   position: relative;
   width: 100%;
-  height: 70px;
+  height: 50px;
   border-bottom: 1px solid #ddd;
   background: rgba(255, 255, 255, 0.219);
   backdrop-filter: blur(20px);
@@ -130,22 +128,22 @@ const background = computed(() => {
       display: flex;
       align-items: center;
       .avt {
-        width: 50px;
-        height: 50px;
+        width: 38px;
+        height: 38px;
         border-radius: 50em;
         margin-right: 10px;
       }
 
       .avtName {
         display: flex;
-        width: 50px;
-        height: 50px;
+        width: 38px;
+        height: 38px;
         border-radius: 50em;
         margin-right: 10px;
         background: #ddd;
         span {
           margin: auto;
-          font-size: 1.6rem;
+          font-size: 1.3rem;
           transform: translateY(-1px);
         }
       }
@@ -157,7 +155,7 @@ const background = computed(() => {
   .wrapper {
     margin: 0 20px;
     position: relative;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 90px);
     .content {
       position: absolute;
       inset: 0;

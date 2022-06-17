@@ -136,10 +136,15 @@ async function handleClick(data) {
         </div>
       </div>
       <div :class="$style.content">
-        <h3>{{ i.friendInfo?.displayName }}</h3>
-        <div style="display: flex">
-          <p :class="$style.message">{{ i.mess?.content }}</p>
-          <span v-if="i.mess">{{ formatTime(i.mess?.createdAt.seconds) }}</span>
+        <h3 :class="$style.displayName">{{ i.friendInfo?.displayName }}</h3>
+        <div :class="$style.body">
+          <div>
+            <p :class="$style.message">{{ i.mess?.content }}</p>
+          </div>
+          <span v-if="i.mess">
+            . {{ formatTime(i.mess?.createdAt.seconds) }}</span
+          >
+
           <span v-else> . {{ formatTime(i.createdAt?.seconds) }}</span>
         </div>
       </div>
@@ -194,14 +199,15 @@ async function handleClick(data) {
   .item {
     position: relative;
     display: flex;
-    border-bottom: 1px solid #ddd;
+    // border-bottom: 1px solid #ddd;
     align-items: center;
-    height: 80px;
-    padding: 0 20px;
+    height: 70px;
+    padding: 0 10px;
+    margin: 0 10px;
 
     .avt {
-      width: 50px;
-      height: 50px;
+      width: 46px;
+      height: 46px;
       margin-right: 10px;
       .avtImg {
         border-radius: 50em;
@@ -227,6 +233,19 @@ async function handleClick(data) {
     .content {
       flex: 1;
       overflow: hidden;
+
+      .body {
+        display: flex;
+        // justify-content: space-between;
+
+        div {
+          flex: 1;
+        }
+      }
+
+      .displayName {
+        font-size: 1.05rem;
+      }
 
       .message {
         display: -webkit-box;
@@ -258,18 +277,19 @@ async function handleClick(data) {
   .item:hover,
   .itemActive {
     position: relative;
-    background: #fff;
     cursor: pointer;
+    background: #efefef;
+    border-radius: 6px;
 
-    &::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 2px;
-      background: #ec532a;
-    }
+    // &::before {
+    //   content: "";
+    //   position: absolute;
+    //   left: 0;
+    //   top: 0;
+    //   height: 100%;
+    //   width: 2px;
+    //   background: #ec532a;
+    // }
   }
 }
 </style>

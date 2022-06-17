@@ -89,9 +89,9 @@ watch(dChat, (n) => {
 });
 
 //
-watch(chats, (n) => {
-  console.log(n);
-});
+// watch(chats, (n) => {
+//   console.log(n);
+// });
 </script>
 <template>
   <div :class="$style.chatView" ref="chatMain">

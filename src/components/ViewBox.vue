@@ -5,32 +5,22 @@ import {
   watch,
   getCurrentInstance,
   onUpdated,
-  onMounted,
   ref,
 } from "vue";
 const props = defineProps(["src"]);
-import { v4 as uuidv4 } from "uuid";
-
 const { proxy } = getCurrentInstance();
 const imgList = reactive({ data: [] });
 const list = computed(() => props.src);
-const classBtn = ref("");
-let rd = uuidv4();
-rd = rd.replace("-", "");
-classBtn.value = rd.replace("-", "");
-console.log(rd);
+
+const arr = [];
+arr.push(props.src);
+imgList.data = arr;
 
 watch(list, (n) => {
-  console.log(n);
+  // console.log(n);
   const arr = [];
   arr.push(n);
   imgList.data = arr;
-});
-
-onUpdated(() => {
-  const el = document.querySelector(`.${classBtn.value}`)?.click();
-  console.log(el);
-  el.click();
 });
 </script>
 
@@ -42,7 +32,19 @@ onUpdated(() => {
       :key="src"
       :src="src"
     >
-      <button v-if="index === 0" :class="classBtn" ref="op">okkko</button>
+      <button v-if="index === 0" class="classBtn"></button>
     </photo-consumer>
   </photo-provider>
 </template>
+<style>
+.classBtn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  height: calc(100% - 50px);
+  border: 0;
+  background: transparent;
+}
+</style>

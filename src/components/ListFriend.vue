@@ -79,7 +79,7 @@ async function handleClickFriend(user) {
         </div>
       </div>
       <div :class="$style.content">
-        <h3>{{ i.displayName }}</h3>
+        <h3 :class="$style.displayName">{{ i.displayName }}</h3>
       </div>
     </div>
   </div>
@@ -126,15 +126,19 @@ async function handleClickFriend(user) {
   overflow: auto;
   .item {
     display: flex;
-    border-bottom: 1px solid #ddd;
+    // border-bottom: 1px solid #ddd;
     align-items: center;
-    height: 80px;
-    padding: 0 20px;
-    cursor: pointer;
+    height: 70px;
+    padding: 0 10px;
+    margin: 0 10px;
+
+    .displayName {
+      font-size: 1.05rem;
+    }
 
     .avt {
-      width: 50px;
-      height: 50px;
+      width: 46px;
+      height: 46px;
       margin-right: 10px;
       .avtImg {
         border-radius: 50em;
@@ -186,17 +190,19 @@ async function handleClickFriend(user) {
   .item:hover,
   .itemActive {
     position: relative;
-    background: #fff;
+    cursor: pointer;
+    background: #efefef;
+    border-radius: 6px;
 
-    &::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 2px;
-      background: #ec532a;
-    }
+    // &::before {
+    //   content: "";
+    //   position: absolute;
+    //   left: 0;
+    //   top: 0;
+    //   height: 100%;
+    //   width: 2px;
+    //   background: #ec532a;
+    // }
   }
 }
 </style>
