@@ -393,6 +393,23 @@
     protobufjs "^6.10.0"
     yargs "^16.2.0"
 
+"@nguyenvanlong/vue3-chat-emoji@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@nguyenvanlong/vue3-chat-emoji/-/vue3-chat-emoji-0.0.9.tgz#dcc77312d8a7c500d1da51a36a4aa792364eee99"
+  integrity sha512-9wrzLmJCD54TUu5JnZlazp4hKAl3FcXku8PBr0sSEXBv+Vflrzkj2h2mKBFm4WW/2r3b4pGLyA07URSEPPvKWg==
+  dependencies:
+    sass "^1.52.3"
+    vue "^3.2.36"
+
+"@nguyenvanlong/vue3-chat-emoji@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@nguyenvanlong/vue3-chat-emoji/-/vue3-chat-emoji-0.1.1.tgz#5a0ce343fd856cb112ee548a3a6ec60e83fa5437"
+  integrity sha512-2Lgs2vDG/rxkxCxtx/ToOOxZcGhP2RpAxUfSAZOgPRzX3Rlc4piqdLwUPDjasFyd4vxknkFPlWXfRtP8iO6TSw==
+  dependencies:
+    "@nguyenvanlong/vue3-chat-emoji" "^0.0.9"
+    sass "^1.52.3"
+    vue "^3.2.36"
+
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@protobufjs/aspromise/-/aspromise-1.1.2.tgz"
@@ -1279,6 +1296,15 @@ sass@^1.52.1:
     immutable "^4.0.0"
     source-map-js ">=0.6.2 <2.0.0"
 
+sass@^1.52.3:
+  version "1.52.3"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.52.3.tgz#b7cc7ffea2341ccc9a0c4fd372bf1b3f9be1b6cb"
+  integrity sha512-LNNPJ9lafx+j1ArtA7GyEJm9eawXN8KlA1+5dF6IZyoONg1Tyo/g+muOsENWJH/2Q1FHbbV4UwliU0cXMa/VIA==
+  dependencies:
+    chokidar ">=3.0.0 <4.0.0"
+    immutable "^4.0.0"
+    source-map-js ">=0.6.2 <2.0.0"
+
 selenium-webdriver@4.1.2:
   version "4.1.2"
   resolved "https://registry.npmjs.org/selenium-webdriver/-/selenium-webdriver-4.1.2.tgz"
@@ -1412,6 +1438,11 @@ vue-router@^4.0.14:
   dependencies:
     "@vue/devtools-api" "^6.0.0"
 
+vue-screen@^2.1.0-beta.1:
+  version "2.1.0-beta.1"
+  resolved "https://registry.yarnpkg.com/vue-screen/-/vue-screen-2.1.0-beta.1.tgz#b9a3b3a893d71444d577995d6f377d9d9dcc7565"
+  integrity sha512-U1qpJ3vteECELCin8y6QTh/tDfvfn96ExzzcVY+gL4kLUiJk4rC/+vJaV9Zsd7iK33JKx8kn3wYhM1nmQmD7tQ==
+
 vue3-photo-preview@^0.2.4:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/vue3-photo-preview/-/vue3-photo-preview-0.2.4.tgz#2de735da0da9b88dea0a2fe3581912a4215f509b"
@@ -1420,7 +1451,7 @@ vue3-photo-preview@^0.2.4:
     lodash-es "^4.17.21"
     vue "3.2.x"
 
-vue@3.2.x:
+vue@3.2.x, vue@^3.2.36:
   version "3.2.37"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.37.tgz#da220ccb618d78579d25b06c7c21498ca4e5452e"
   integrity sha512-bOKEZxrm8Eh+fveCqS1/NkG/n6aMidsI6hahas7pa0w/l7jkbssJVsRhVDs07IdDq7h9KHswZOgItnwJAgtVtQ==

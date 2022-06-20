@@ -7,6 +7,7 @@
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
+    "@nguyenvanlong/vue3-chat-emoji": "^0.1.1",
     "firebase": "^9.8.1",
     "moment": "^2.29.3",
     "oh-vue-icons": "^1.0.0-rc3",
@@ -18,6 +19,7 @@
     "uuid": "^8.3.2",
     "vue": "^3.2.33",
     "vue-router": "^4.0.14",
+    "vue-screen": "^2.1.0-beta.1",
     "vue3-photo-preview": "^0.2.4"
   },
   "devDependencies": {

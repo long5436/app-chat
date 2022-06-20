@@ -1,6 +1,11 @@
 <script setup>
 import { RouterView } from "vue-router";
 import AppProvider from "@/service/appProvider.vue";
+import { VueChatEmojiComponent } from "@nguyenvanlong/vue3-chat-emoji";
+
+// import { useScreen, useGrid } from "vue-screen";
+// const screen = useScreen();
+// console.log(screen);
 </script>
 
 <template>

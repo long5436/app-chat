@@ -23,10 +23,12 @@ import {
   where,
   auth,
   onAuthStateChanged,
+  orderBy,
 } from "@/firebase/config";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 //
 const router = useRouter();
+const route = useRoute();
 const chatStore = useChatStore();
 const userStore = useUserStore();
 const userApp = useAppStore();
@@ -52,143 +54,95 @@ watchEffect(() => {
       console.log("da dang nhap");
       login.value = true;
       userStore.setUserInfo(user);
-      router.push({ path: "/" });
+      if (route.name === "login" || route.name === "register") {
+        router.push({ path: "/" });
+      }
     }
   });
 });
 
-// async function getChatListsUser() {
-//   if (userInfo.value.uid) {
-//     const data = await getChatLists("chats", userInfo.value.uid);
-//     const data2 = data.map((item, index) => {
-//       const uid = item.members.find((mem) => mem !== userInfo.value.uid);
-//       return { index, uid };
-//     });
+async function getNotifications() {
+  console.log(userInfo.value.uid);
+  console.log("thong bao dang chay");
+  if (userInfo.value.uid) {
+    const collectionRef = collection(db, "notifications");
+    const q = query(
+      collectionRef,
+      where("uidReceive", "==", userInfo.value.uid),
+      orderBy("createdAt", "desc")
+    );
+    const querySnapshot = await getDocs(q);
 
-//     console.log(data);
-//     chatStore.addChatList(data);
-//   }
-// }
-
-// watchEffect(async () => {
-//   if (userInfo.value.uid) {
-//     const collectionRef = collection(db, "chats");
-//     const q = query(
-//       collectionRef,
-//       where("members", "array-contains", userInfo.value.uid)
-//     );
-//     const querySnapshot = await getDocs(q);
-//     let data = [];
-
-//     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-//       let newData = [];
-//       querySnapshot.forEach(async (document) => {
-//         newData.push(document.data());
-//         // return document.data();
-//       });
-//       // console.log(newData);
-//       chatList.data = newData;
-
-//       chatList.data.forEach(async (user) => {
-//         const uid = user.members.find((mem) => mem !== userInfo.value.uid);
-//         // console.log(uid);
-//         const res = await getUser("users", uid);
-//         userStore.addUser(res);
-//         user.friendInfo = res;
-//         // console.log(user);
-//         // console.log(chatList.data);
-//         console.log("da cap nhat chat list");
-//       });
-//     });
-//   }
-// });
-
-// sua loi goi lay list chat nhieu lan
-async function getChatListChat() {
-  watch(userId, async (uid) => {
-    if (uid) {
-      const collectionRef = collection(db, "chats");
-      const q = query(collectionRef, where("members", "array-contains", uid));
-      const querySnapshot = await getDocs(q);
-
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        watch(userInfo, () => {
-          console.log("da unsubscribe list chat");
-          unsubscribe();
-          getChatListChat();
-        });
-
-        let newData = [];
-        querySnapshot.forEach(async (document) => {
-          newData.push(document.data());
-          // console.log(document.data());
-          // return document.data();
-        });
-        // console.log(newData);
-        chatList.data = newData;
-
-        chatList.data.forEach(async (user) => {
-          const uid = user.members.find((mem) => mem !== userInfo.value.uid);
-          // console.log(uid);
-          const res = await getUser("users", uid);
-          userStore.addUser(res);
-          user.friendInfo = res;
-          // console.log(user);
-          // console.log(chatList.data);
-          console.log("da cap nhat chat list");
-        });
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      watch(userInfo, () => {
+        unsubscribe();
+        console.log("da huy snapshot thong bao");
+        getNotifications();
       });
-    }
-  });
 
-  // const collectionRef = collection(db, "chats");
-  // const q = query(collectionRef, where("members", "array-contains", userId.value));
-  // const querySnapshot = await getDocs(q);
+      console.log("da bat dau snapshot thong bao");
 
-  // console.log(querySnapshot);
+      let noificationsList = [];
+      // bi loi khong xoa thong bao tren giao dien nen buoc xoa tat ca truoc khi snapshot
+      userApp.setNotifications(noificationsList);
 
-  // const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //   watch(userInfo, () => {
-  //     console.log("da unsubscribe list chat");
-  //     unsubscribe();
-  //     getChatListChat();
-  //   });
-
-  //   let newData = [];
-  //   querySnapshot.forEach(async (document) => {
-  //     newData.push(document.data());
-  //     console.log(document.data());
-  //     // return document.data();
-  //   });
-  //   // console.log(newData);
-  //   chatList.data = newData;
-
-  //   chatList.data.forEach(async (user) => {
-  //     const uid = user.members.find((mem) => mem !== userInfo.value.uid);
-  //     // console.log(uid);
-  //     const res = await getUser("users", uid);
-  //     userStore.addUser(res);
-  //     user.friendInfo = res;
-  //     // console.log(user);
-  //     // console.log(chatList.data);
-  //     console.log("da cap nhat chat list");
-  //   });
-  // });
+      querySnapshot.forEach(async (document) => {
+        console.log("du lieu: ", document.data());
+        noificationsList.push(document.data());
+        userApp.setNotifications(noificationsList);
+      });
+    });
+  }
 }
 
-getChatListChat(); // goi lan dau
+// sua loi goi lay list chat nhieu lan
+// ham nay co van de (chua fix)
+async function getChatListChat() {
+  if (userInfo.value.uid) {
+    const collectionRef = collection(db, "chats");
+    const q = query(
+      collectionRef,
+      where("members", "array-contains", userInfo.value.uid)
+    );
+    const querySnapshot = await getDocs(q);
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      watch(userInfo, () => {
+        console.log("da unsubscribe list chat");
+        unsubscribe();
+        getChatListChat();
+      });
+
+      let newData = [];
+      querySnapshot.forEach(async (document) => {
+        newData.push(document.data());
+        // console.log(document.data());
+        // return document.data();
+      });
+      // console.log(newData);
+      chatList.data = newData;
+
+      // da thay doi cau truc database nen khong can cai nay
+      // console.log(chatList.data);
+      // chatList.data.forEach(async (user) => {
+      //   const uid = user.members.find((mem) => mem !== userInfo.value.uid);
+      //   // console.log(uid);
+      //   const res = await getUser("users", uid);
+      //   userStore.addUser(res);
+      //   user.friendInfo = res;
+      //   // console.log(user);
+      //   // console.log(chatList.data);
+      //   console.log("da cap nhat chat list");
+      // });
+    });
+  }
+}
 
 //
-watch(userInfo, (n) => {
-  getUserFriends();
-});
-
-watch(chatList, (n) => {
-  // console.log(n);
-  chatStore.addChatList(n.data);
-});
 
 async function getUserFriends() {
+  console.log(userInfo.value.uid);
+
   if (userInfo.value.uid) {
     const collectionRef = collection(db, "users");
     const q = query(collectionRef, where("uid", "==", userInfo.value.uid));
@@ -215,74 +169,27 @@ async function getUserFriends() {
   //   });
 }
 
-getUserFriends();
-// getChatListsUser();
-// console.log(friends.data);
-
-// hard code
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-const currentChatId = computed(() => chatStore.getCurrentChatId);
-// console.log(currentChatId.value);
-
-// watchEffect(async () => {
-//   const ff = collection(db, "messages");
-//   const ee = query(ff, where("chatId", "==", currentChatId.value));
-//   const eee = await getDocs(ee);
-
-//   let unsubscribe = onSnapshot(ee, (eee) => {
-//     watch(currentChatId, (n) => {
-//       // console.log("da unsubscribe");
-//       unsubscribe();
-//     });
-
-//     // let mess
-//     eee.forEach(async (document) => {
-//       // console.log("--------------------------------");
-//       // console.log(document.get("chatData")?.pop());
-//       const pop = document.get("chatData")?.pop();
-//       const chatId = document.get("chatId");
-//       // console.log(pop?.createdAt);
-//       // console.log(currentChatId.value);
-//       // console.log("theo doi tin nhan hard code trong AppProvider");
-//       chatStore.addChatDataContent({ chatId, pop });
-//       //   friends.data = document.data();
-//     });
-//   });
-// });
-
 // fix snapshot lai nhieu lan khong mong muon
+// loi watch van bi lap lai khong mong muon
+// fix tam bang cac dat bien tam de so sanh khi watch chay
+const currentChatId = computed(() => chatStore.getCurrentChatId);
+
+let tempCurrentChatId = "";
 async function watchChatModify() {
   const ff = collection(db, "messages");
   const ee = query(ff, where("chatId", "==", currentChatId.value));
   const eee = await getDocs(ee);
 
-  let unsubscribe = onSnapshot(ee, (eee) => {
+  const unsubscribe = onSnapshot(ee, (eee) => {
     watch(currentChatId, (n) => {
-      console.log("da unsubscribe watch chat");
-      console.log("da watch lai chat ");
-      unsubscribe();
-      watchChatModify();
+      // console.log({ n, tempCurrentChatId });
+      if (n !== tempCurrentChatId) {
+        tempCurrentChatId = n;
+        console.log("da unsubscribe watch chat");
+        console.log("da watch lai chat ");
+        unsubscribe();
+        watchChatModify();
+      }
     });
 
     // let mess
@@ -303,7 +210,22 @@ async function watchChatModify() {
 }
 
 // goi lan dau khi khoi chay
+getNotifications();
 watchChatModify();
+getUserFriends();
+getChatListChat();
+
+// theo doi su thay doi va goi lai khi lan dau that bai
+watch(userInfo, (n) => {
+  getUserFriends();
+  getNotifications();
+  getChatListChat();
+});
+
+watch(chatList, (n) => {
+  // console.log(n);
+  chatStore.addChatList(n.data);
+});
 </script>
 <template>
   <slot></slot>

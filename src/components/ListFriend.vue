@@ -23,6 +23,7 @@ async function handleClickFriend(user) {
     addDocument("chats", {
       id: userInfo.value.uid + user.uid,
       name: "",
+      membersInfo: [userInfo.value, user],
       members: [userInfo.value.uid, user.uid],
       theme: {
         id: 0,
@@ -79,7 +80,12 @@ async function handleClickFriend(user) {
         </div>
       </div>
       <div :class="$style.content">
-        <h3 :class="$style.displayName">{{ i.displayName }}</h3>
+        <div>
+          <h3 :class="$style.displayName">{{ i.displayName }}</h3>
+        </div>
+        <button :class="$style.btn">
+          <v-icon name="bi-chat-text" :class="$style.icon" />
+        </button>
       </div>
     </div>
   </div>
@@ -161,12 +167,18 @@ async function handleClickFriend(user) {
     }
 
     .content {
-      .message {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1;
-        overflow: hidden;
-        color: #7e7e7e;
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+
+      .btn {
+        background: transparent;
+        border: 0;
+        .icon {
+          width: 28px;
+          height: 28px;
+          color: #ec532a;
+        }
       }
     }
 
