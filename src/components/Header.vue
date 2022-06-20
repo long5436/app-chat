@@ -72,9 +72,9 @@ function setCountNoti(data) {
     <div :class="$style.wrapper">
       <div :class="$style.avatar">
         <img
-          v-if="getUser.photo"
+          v-if="getUser.photoURL"
           :class="$style.img"
-          :src="getUser.photo ? getUser.photoURL : userImg"
+          :src="getUser.photoURL ? getUser.photoURL : userImg"
           alt=""
         />
         <div

@@ -29,6 +29,7 @@ import {
   PrTimes,
   BiImage,
   RiSearchLine,
+  BiChatText,
 } from "oh-vue-icons/icons";
 
 const app = createApp(App);
@@ -53,7 +54,8 @@ addIcons(
   IoNotificationsOutline,
   PrTimes,
   BiImage,
-  RiSearchLine
+  RiSearchLine,
+  BiChatText
 );
 
 app.use(createPinia());

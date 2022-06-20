@@ -6,6 +6,8 @@ import sortArray from "sort-objects-array";
 import { useUserStore } from "@/stores/user";
 import { useAppStore } from "@/stores/app";
 import { useChatStore } from "@/stores/chat";
+import ChatListAvt from "./ChatListAvt.vue";
+import ChatListDisplayName from "./chatListDisplayName.vue";
 import { getUser, getChat } from "@/firebase/services";
 import {
   watchSyncEffect,
@@ -15,7 +17,7 @@ import {
   watch,
   computed,
 } from "vue";
-import createAvtString from "@/plugins/createAvtString";
+
 import {
   collection,
   db,
@@ -48,7 +50,7 @@ watch(chatList, (newVal) => {
   chatListSnapShot.data = newVal;
 
   chatListSnapShot.data2.forEach(async (e, index) => {
-    console.log(e.id, index);
+    // console.log(e.id, index);
     const collectionRef = collection(db, "messages");
     const q = query(collectionRef, where("chatId", "==", e.id));
     const querySnapshot = await getDocs(q);
@@ -89,11 +91,22 @@ async function handleClick(data) {
     // console.log(data);
     chatStore.addChatData(chatContentData);
   }
+
+  let currentChatUser;
+  if (data.membersInfo[0].uid === userInfo.value.uid) {
+    currentChatUser = data.membersInfo[0];
+  } else {
+    currentChatUser = data.membersInfo[1];
+  }
+  // console.log(currentChatUser);
   // // console.log(data.chatData);
   // // chatStore.addChatData(data.chatData);
-  chatStore.addCurrentChatUser(data);
+  chatStore.addCurrentChatUser({
+    user: currentChatUser,
+    id: data.id,
+  });
   appStore.setTheme(data.theme);
-  currentChatId.value = data.friendInfo?.uid;
+  currentChatId.value = data.id;
 }
 </script>
 
@@ -111,32 +124,12 @@ async function handleClick(data) {
     <div
       v-for="(i, index) in chatListSnapShot.data"
       :key="index"
-      :class="[
-        $style.item,
-        { [$style.itemActive]: i.friendInfo?.uid === currentChatId },
-      ]"
+      :class="[$style.item, { [$style.itemActive]: i.id === currentChatId }]"
       @click="handleClick(i)"
     >
-      <div :class="$style.avt">
-        <img
-          v-if="i.friendInfo?.photoURL"
-          :src="i.friendInfo.photoURL || av2"
-          alt=""
-          :class="$style.avtImg"
-        />
-        <div
-          v-else
-          :class="$style.avtText"
-          :style="{
-            background: i.friendInfo?.theme.backgroundColor,
-            color: i.friendInfo?.theme.textColor,
-          }"
-        >
-          <span>{{ createAvtString(i.friendInfo?.displayName).name }} </span>
-        </div>
-      </div>
+      <ChatListAvt :data="i" />
       <div :class="$style.content">
-        <h3 :class="$style.displayName">{{ i.friendInfo?.displayName }}</h3>
+        <ChatListDisplayName :data="i" />
         <div :class="$style.body">
           <div>
             <p :class="$style.message">{{ i.mess?.content }}</p>
@@ -205,31 +198,6 @@ async function handleClick(data) {
     padding: 0 10px;
     margin: 0 10px;
 
-    .avt {
-      width: 46px;
-      height: 46px;
-      margin-right: 10px;
-      .avtImg {
-        border-radius: 50em;
-        width: inherit;
-        height: inherit;
-      }
-
-      .avtText {
-        display: inline-flex;
-        // justify-content: ce;
-        background: #ddd;
-        border-radius: 50em;
-        width: inherit;
-        height: inherit;
-
-        span {
-          margin: auto;
-          font-size: 1.3rem;
-        }
-      }
-    }
-
     .content {
       flex: 1;
       overflow: hidden;
@@ -241,10 +209,6 @@ async function handleClick(data) {
         div {
           flex: 1;
         }
-      }
-
-      .displayName {
-        font-size: 1.05rem;
       }
 
       .message {

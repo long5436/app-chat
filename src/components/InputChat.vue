@@ -1,9 +1,10 @@
 <script setup>
-import { ref, getCurrentInstance, watch, computed } from "vue";
+import { ref, getCurrentInstance, watch, computed, onUpdated } from "vue";
 import { useChatStore } from "@/stores/chat";
 import { useUserStore } from "@/stores/user";
 import { sendMessage } from "@/firebase/services";
 import SendIcon from "@/components/icons/send.vue";
+import ChatEmoji from "./ChatEmoji.vue";
 
 import {
   collection,
@@ -28,6 +29,7 @@ const textShow = ref("true");
 const showMic = ref("true");
 const enableSendBtn = ref("false");
 const sourceImg = ref("");
+const openEmoji = ref(false);
 
 function handleChange(event) {
   if (event.keyCode === 13) {
@@ -63,6 +65,8 @@ function submit() {
     if (el) el.innerText = "";
     input.value = "";
   }
+
+  openEmoji.value = false;
 }
 
 let file;
@@ -100,10 +104,50 @@ async function sendImage() {
 
 function removeImg() {
   sourceImg.value = null;
+  const el = proxy.$refs.selImg;
+  el.value = "";
   const storageRef = ref(storage, "some-child");
 
   // 'file' comes from the Blob or File API
 }
+
+function onPaste(event) {
+  let items = event.clipboardData && event.clipboardData.items;
+  let file = null;
+  if (items && items.length) {
+    //Retrieve clipboard items
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        file = items[i].getAsFile();
+      }
+    }
+  }
+  if (!file) {
+    return;
+  }
+  console.log(file);
+
+  // if (el) el.innerText = "";
+}
+
+function toggleEmoji() {
+  openEmoji.value = !openEmoji.value;
+}
+
+function handleEmitEmoji(data) {
+  // console.log(data);
+  const el = proxy.$refs.iput;
+  input.value += data;
+
+  if (el) el.innerText += data;
+}
+
+onUpdated(() => {
+  // var a = document.querySelector("p[contenteditable]");
+  // console.log(a);
+  // not work
+  // a.innerHTML = "";
+});
 
 watch(sourceImg, (n) => {
   if (n) {
@@ -151,15 +195,18 @@ watch(input, (n) => {
           @keydown="handleKeyDown"
           @keyup="handleChange"
           @keydown.enter.prevent
+          @paste="onPaste"
           ref="iput"
         ></p>
         <p v-if="textShow" :class="$style.text">Nội dung tin nhắn</p>
-        <div :class="$style.img" v-if="sourceImg" style="display: flex">
+        <div :class="$style.img" v-if="sourceImg">
           <div
             :class="$style.imagePreviewWrapper"
             :style="{ 'background-image': `url(${sourceImg})` }"
           ></div>
-          <button @click="removeImg">x</button>
+          <button :class="$style.btn" @click="removeImg">
+            <v-icon name="pr-times" :class="$style.icon" />
+          </button>
         </div>
       </div>
       <div :class="$style.actions">
@@ -167,9 +214,13 @@ watch(input, (n) => {
           <v-icon name="bi-image" :class="$style.icon" />
           <input type="file" ref="selImg" v-show="false" />
         </button>
-        <button :class="$style.btn">
+        <button
+          :class="[$style.btn, { [$style.active]: openEmoji }]"
+          @click="toggleEmoji"
+        >
           <v-icon name="fa-regular-smile" :class="$style.icon" />
         </button>
+        <ChatEmoji v-if="openEmoji" @click-emoji="handleEmitEmoji" />
       </div>
     </div>
     <button :class="$style.sendBtn" :disabled="enableSendBtn" @click="submit">
@@ -255,6 +306,9 @@ watch(input, (n) => {
       }
 
       .img {
+        display: flex;
+        align-items: center;
+
         .imagePreviewWrapper {
           width: 200px;
           height: 200px;
@@ -263,9 +317,21 @@ watch(input, (n) => {
           background-position: left;
         }
 
-        button {
+        .btn {
           width: 30px;
           height: 30px;
+          display: flex;
+          padding: 0;
+          border: 0;
+          background: transparent;
+
+          .icon {
+            margin: auto;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            color: #777;
+          }
         }
       }
     }
@@ -273,6 +339,7 @@ watch(input, (n) => {
     // text-align: right;
 
     .actions {
+      position: relative;
       height: 36px;
       display: flex;
       align-items: center;
@@ -284,6 +351,13 @@ watch(input, (n) => {
           width: 22px;
           height: 22px;
           color: #888;
+        }
+      }
+
+      .btn:hover,
+      .btn.active {
+        .icon {
+          color: #ec532a;
         }
       }
     }

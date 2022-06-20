@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, reactive } from "vue";
+import PopupNotification from "@/components/PopupNotification.vue";
+import { ref, computed, reactive, watch } from "vue";
 import {
   auth,
   createUserWithEmailAndPassword,
@@ -8,6 +9,8 @@ import {
 //
 
 const passwordHide = ref(false);
+const disableBtn = ref(true);
+const showNotification = ref(false);
 const type = computed(() => {
   return passwordHide.value ? "text" : "password";
 });
@@ -16,19 +19,50 @@ const dataFrom = reactive({ email: "", password: "" });
 // methods
 
 async function submitLogin() {
-  // console.log(dataFrom);
-  const userCredential = await signInWithEmailAndPassword(
-    auth,
-    dataFrom.email,
-    dataFrom.password
-  );
-  console.log(userCredential);
-  const user = userCredential.user;
+  console.log(dataFrom);
+  if (disableBtn) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        dataFrom.email,
+        dataFrom.password
+      );
+      console.log(userCredential);
+      const user = userCredential.user;
+    } catch (error) {
+      showNotification.value = true;
+      dataFrom.password = "";
+      dataFrom.email = "";
+      setTimeout(() => {
+        showNotification.value = false;
+      }, 5000);
+      console.log(error);
+    }
+  }
 }
 
-function changePasswordHide() {
-  passwordHide.value = !passwordHide.value;
+function changePasswordHide(event) {
+  if (event.pointerType === "mouse") {
+    passwordHide.value = !passwordHide.value;
+  } else {
+    submitLogin();
+  }
 }
+
+// validation
+watch(dataFrom, (n) => {
+  if (n.password.length >= 6) {
+    console.log(n.password.length);
+    if (n.email) {
+      disableBtn.value = false;
+    } else {
+      disableBtn.value = true;
+    }
+  } else {
+    disableBtn.value = true;
+  }
+  console.log(disableBtn.value);
+});
 </script>
 <template>
   <form :class="$style.form" @submit.prevent>
@@ -40,6 +74,7 @@ function changePasswordHide() {
         type="email"
         placeholder="Email"
         v-model="dataFrom.email"
+        @keydown.enter="submitLogin"
       />
     </div>
     <div :class="$style.inputBox">
@@ -48,6 +83,7 @@ function changePasswordHide() {
         :type="type"
         placeholder="Mật khẩu"
         v-model="dataFrom.password"
+        @keydown.enter="submitLogin"
       />
       <button
         @click="changePasswordHide"
@@ -62,11 +98,22 @@ function changePasswordHide() {
     </div>
     <div :class="$style.forgetPass">
       <router-link :class="$style.link" :to="{ path: '/register' }">
-        chưa có tài khoản? Đăng ký ngay
+        Chưa có tài khoản? Đăng ký ngay
       </router-link>
     </div>
-    <button :class="$style.btnSubmit" @click="submitLogin">Đăng nhập</button>
+    <button
+      type="submit"
+      :disabled="disableBtn"
+      :class="$style.btnSubmit"
+      @click="submitLogin"
+    >
+      Đăng nhập
+    </button>
   </form>
+  <PopupNotification
+    v-if="showNotification"
+    :content="'Email hoặc mật khẩu không chính xác'"
+  />
 </template>
 
 <style lang="scss" module>
@@ -130,6 +177,11 @@ function changePasswordHide() {
     &:hover {
       filter: brightness(95%);
     }
+  }
+
+  .btnSubmit[disabled] {
+    filter: brightness(80%);
+    cursor: default;
   }
 
   .forgetPass {

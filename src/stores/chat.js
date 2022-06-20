@@ -59,7 +59,7 @@ export const useChatStore = defineStore({
     },
 
     addCurrentChatUser(data) {
-      this.currentChatUser = data.friendInfo;
+      this.currentChatUser = data.user;
       this.currentChatId = data.id;
     },
   },

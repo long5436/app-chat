@@ -1,65 +1,29 @@
 <script setup>
 import { useUserStore } from "@/stores/user";
-import {
-  db,
-  collection,
-  query,
-  where,
-  getDocs,
-  onSnapshot,
-  orderBy,
-} from "@/firebase/config";
+import { useAppStore } from "@/stores/app";
 import { computed, watch, reactive } from "vue";
 import { deleteNotification, addNotification } from "@/firebase/notification";
 import { addFiend } from "@/firebase/services";
 //
 const userStore = useUserStore();
+const appStore = useAppStore();
 const listNoti = reactive({ data: [] });
 const userInfo = computed(() => userStore.getUserinfo);
 const uid = computed(() => userInfo.value.uid);
 const emit = defineEmits(["count"]);
+const notifications = computed(() => appStore.getNotifications);
 
-async function getNotifications() {
-  console.log(uid.value);
-  if (uid.value) {
-    console.log("da vo");
-    const collectionRef = collection(db, "notifications");
-    const q = query(
-      collectionRef,
-      where("uidReceive", "==", uid.value),
-      orderBy("createdAt", "desc")
-    );
-    const querySnapshot = await getDocs(q);
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      watch(userInfo, () => {
-        unsubscribe();
-        console.log("da huy snapshot thong bao");
-        getNotifications();
-      });
-
-      console.log("da bat dau snapshot thong bao");
-
-      let noificationsList = [];
-      querySnapshot.forEach(async (document) => {
-        console.log(document.data());
-        noificationsList.push(document.data());
-      });
-
-      listNoti.data = noificationsList;
-    });
-  }
-}
-
-// getNotifications(); // goi lan dau
+watch(notifications, (n) => {
+  listNoti.data = n;
+});
 
 function deleteNoti(id) {
+  console.log(id);
   deleteNotification(id);
 }
 
 function acceptFriend(data) {
   console.log(data);
-
   const dataReMessage = {
     send: data.receive,
     receive: data.send,
@@ -72,11 +36,6 @@ function acceptFriend(data) {
   addNotification(dataReMessage);
   deleteNotification(data.id);
 }
-
-watch(userInfo, (n) => {
-  // console.log(n);
-  getNotifications(); // goi lan dau
-});
 
 watch(listNoti, (n) => {
   emit("count", n.data.length);

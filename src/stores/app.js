@@ -19,11 +19,13 @@ export const useAppStore = defineStore({
       },
       background: "",
     },
+    notifications: [],
   }),
   getters: {
     getPageFriend: (state) => state.pageFriend,
     getListFriend: (state) => state.listFriend,
     getTheme: (state) => state.theme,
+    getNotifications: (state) => state.notifications,
   },
   actions: {
     changePage() {
@@ -36,6 +38,10 @@ export const useAppStore = defineStore({
 
     setTheme(theme) {
       this.theme = theme;
+    },
+
+    setNotifications(data) {
+      this.notifications = data;
     },
   },
 });

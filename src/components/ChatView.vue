@@ -12,6 +12,7 @@ import {
   ref,
   getCurrentInstance,
   onMounted,
+  onUpdated,
   watchEffect,
   watchSyncEffect,
 } from "vue";
@@ -75,10 +76,10 @@ onMounted(() => {
 
   element.addEventListener("scroll", () => {
     if (element.scrollTop < scrollHeight - 300) {
-      // console.log("ok");
+      console.log("ok");
       btnScroll.value = true;
     } else {
-      // console.log("not ok");
+      console.log("not ok");
       btnScroll.value = false;
     }
   });
@@ -92,10 +93,14 @@ watch(dChat, (n) => {
 // watch(chats, (n) => {
 //   console.log(n);
 // });
+
+onUpdated(() => {
+  scrollBottom();
+});
 </script>
 <template>
   <div :class="$style.chatView" ref="chatMain">
-    <div ref="chatContent">
+    <div ref="chatContent" :class="$style.chatContent">
       <template v-for="item in chats" :key="item.index">
         <ChatMessageImage
           v-if="item?.type === 'image'"
@@ -121,38 +126,45 @@ watch(dChat, (n) => {
   overflow-y: scroll;
   padding-bottom: 12px;
 
-  .scroll {
-    position: fixed;
-    bottom: 120px;
-    // left: 50%;
-    width: calc(100vw - 300px);
+  .chatContent {
     display: flex;
-    right: 0;
-    // background: yellow;
-    // transform: translateX(-300px);
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
 
-    .btn {
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 50em;
-      border: 1px solid #ddd;
-      width: 40px;
-      height: 40px;
+    .scroll {
+      position: fixed;
+      bottom: 120px;
+      // left: 50%;
+      width: calc(100vw - 300px);
       display: flex;
-      cursor: pointer;
+      right: 0;
+      // background: yellow;
+      // transform: translateX(-300px);
 
-      &:hover {
-        background: #eee;
+      .btn {
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 50em;
+        border: 1px solid #ddd;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        cursor: pointer;
+
+        &:hover {
+          background: #eee;
+        }
+        .icon {
+          margin: auto;
+          width: 24px;
+          height: 24px;
+          color: #ff7204;
+        }
       }
-      .icon {
-        margin: auto;
-        width: 24px;
-        height: 24px;
-        color: #ff7204;
-      }
+
+      // transform: translateX(-50%);
     }
-
-    // transform: translateX(-50%);
   }
 }
 </style>
