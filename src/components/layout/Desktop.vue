@@ -31,4 +31,15 @@ import Header from "../Header.vue";
     flex: 1;
   }
 }
+
+@media screen and (max-width: 768px) {
+  .main {
+    .sidebar {
+      width: 88px;
+    }
+    // .body {
+    //   flex: 1;
+    // }
+  }
+}
 </style>

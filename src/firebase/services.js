@@ -95,15 +95,17 @@ const addFiend = async (collectionName, currentUser, newFriend) => {
   });
 };
 
-const getUser = async (collectionName, uid) => {
+const getUser = async (uid) => {
   // console.log(uid);
-  const collectionRef = collection(db, collectionName);
+  const collectionRef = collection(db, "users");
   const q = query(collectionRef, where("uid", "==", uid));
   const querySnapshot = await getDocs(q);
 
   let data = {};
+  // console.log("da toi day");
   querySnapshot.forEach(async (document) => {
     data = document.data();
+    // console.log(document.data());
   });
   // console.log(data);
   return data;
@@ -155,7 +157,7 @@ const getChatLists = async (collectionName, currentUserUid) => {
 };
 
 const sendMessage = async (collectionName, currentChatId, message) => {
-  console.log(currentChatId, message);
+  // console.log(currentChatId, message);
 
   const add = async (document, data) => {
     const documentRef = doc(db, collectionName, document.id);
@@ -170,7 +172,7 @@ const sendMessage = async (collectionName, currentChatId, message) => {
   const querySnapshot = await getDocs(q);
 
   querySnapshot.forEach(async (document) => {
-    console.log(document.data());
+    // console.log(document.data());
     add(document, message);
   });
 };

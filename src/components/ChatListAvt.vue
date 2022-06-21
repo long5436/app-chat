@@ -1,7 +1,7 @@
 <script setup>
 import createAvtString from "@/plugins/createAvtString";
 import { useUserStore } from "@/stores/user";
-import { reactive, computed } from "vue";
+import { reactive, computed, watchEffect } from "vue";
 
 const userStore = useUserStore();
 const userInfo = computed(() => userStore.getUserinfo);
@@ -10,11 +10,15 @@ const props = defineProps(["data"]);
 
 // console.log(props.data);
 
-if (props.data.membersInfo[0].uid === userInfo.uid) {
-  userData.data = props.data.membersInfo[1];
-} else {
-  userData.data = props.data.membersInfo[0];
-}
+watchEffect(() => {
+  if (props.data.membersInfo[0].uid === userInfo.value.uid) {
+    userData.data = props.data.membersInfo[1];
+  } else {
+    userData.data = props.data.membersInfo[0];
+  }
+});
+
+// console.log(userData.data);
 </script>
 
 <template>

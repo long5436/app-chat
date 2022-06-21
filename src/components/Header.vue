@@ -4,7 +4,7 @@ import { useUserStore } from "../stores/user";
 import { useAppStore } from "../stores/app";
 import { useChatStore } from "../stores/chat";
 import { useRouter } from "vue-router";
-import { reactive, ref, computed, watch, watchEffect } from "vue";
+import { reactive, ref, computed, onMounted } from "vue";
 import { auth, signOut, db, collection, onSnapshot } from "../firebase/config";
 import userImg from "@/assets/img/user.webp";
 import createAvtString from "@/plugins/createAvtString";
@@ -19,24 +19,20 @@ const router = useRouter();
 const userInf = reactive({});
 const openNoti = ref(false);
 const countNoti = ref(0);
+const isMobile = ref(false);
 //
 const getUser = computed(() => {
   return userStore.getUserinfo;
 });
 
-// watch(getUser, (n) => {
-//   console.log(n);
-// });
+isMobile.value = window.innerWidth <= 768 ? true : false;
 
-// watchEffect(() => {
-//   const d = onSnapshot(collection(db, "users"), (snapshot) => {
-//     const data = snapshot.docs.map((doc) => ({
-//       ...doc.data(),
-//       id: doc.id,
-//     }));
-//     console.log({ data, snapshot, docs: snapshot.docs });
-//   });
-// });
+onMounted(() => {
+  window.addEventListener("resize", () => {
+    // console.log(window);
+    isMobile.value = window.innerWidth <= 768 ? true : false;
+  });
+});
 
 // methods
 function logout() {
@@ -115,7 +111,7 @@ function setCountNoti(data) {
           :class="[$style.btn]"
         >
           <v-icon name="io-chatbubble-ellipses-outline" :class="$style.icon" />
-          <span>Tin nhắn</span>
+          <span v-if="!isMobile">Tin nhắn</span>
           <span :class="$style.noti" v-show="false">6</span>
         </router-link>
 
@@ -125,7 +121,7 @@ function setCountNoti(data) {
           :active-class="$style.btnActive"
         >
           <v-icon name="la-user-friends-solid" :class="$style.icon" />
-          <span>Bạn bè</span>
+          <span v-if="!isMobile">Bạn bè</span>
         </router-link>
 
         <button
@@ -133,7 +129,7 @@ function setCountNoti(data) {
           @click="handleOpenNoti"
         >
           <v-icon name="io-notifications-outline" :class="$style.icon" />
-          <span>Thông báo</span>
+          <span v-if="!isMobile">Thông báo</span>
           <span :class="$style.noti" v-show="countNoti > 0">{{
             countNoti
           }}</span>
@@ -142,11 +138,11 @@ function setCountNoti(data) {
       <div>
         <button :class="$style.btn">
           <v-icon name="io-settings-sharp" :class="$style.icon" />
-          <span>Cài đặt</span>
+          <span v-if="!isMobile">Cài đặt</span>
         </button>
         <button :class="$style.btn" @click="logout">
           <v-icon name="hi-logout" :class="$style.icon" />
-          <span>Đăng xuất</span>
+          <span v-if="!isMobile">Đăng xuất</span>
         </button>
       </div>
       <div :class="$style.notiModal">

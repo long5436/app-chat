@@ -140,12 +140,12 @@ function selectTheme(index) {
     currentTheme.data = currentThemFromStore;
   }
 
-  appStore.setTheme(themes.data[themeSelected.value]);
+  chatStore.setTheme(themes.data[themeSelected.value]);
 }
 
 function closeWindow() {
   emit("close");
-  appStore.setTheme(currentTheme.data);
+  chatStore.setTheme(currentTheme.data);
 }
 </script>
 

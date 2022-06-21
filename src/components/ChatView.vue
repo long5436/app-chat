@@ -70,19 +70,19 @@ onMounted(() => {
   const element = proxy.$refs.chatMain;
   let scrollHeight;
   setTimeout(() => {
-    scrollHeight = element.scrollTop;
+    scrollHeight = element.scrollHeight;
     // console.log(scrollHeight);
   }, 2000);
 
-  element.addEventListener("scroll", () => {
-    if (element.scrollTop < scrollHeight - 300) {
-      console.log("ok");
-      btnScroll.value = true;
-    } else {
-      console.log("not ok");
-      btnScroll.value = false;
-    }
-  });
+  // element.addEventListener("scroll", () => {
+  //   if (element.scrollTop < scrollHeight - 300) {
+  //     console.log("ok");
+  //     btnScroll.value = true;
+  //   } else {
+  //     console.log("not ok");
+  //     btnScroll.value = false;
+  //   }
+  // });
 });
 
 watch(dChat, (n) => {
@@ -127,10 +127,10 @@ onUpdated(() => {
   padding-bottom: 12px;
 
   .chatContent {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    height: 100%;
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: flex-end;
+    // height: 100%;
 
     .scroll {
       position: fixed;
