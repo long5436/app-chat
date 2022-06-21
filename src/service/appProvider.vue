@@ -68,8 +68,8 @@ async function getNotifications() {
     const collectionRef = collection(db, "notifications");
     const q = query(
       collectionRef,
-      where("uidReceive", "==", userInfo.value.uid),
-      orderBy("createdAt", "desc")
+      where("uidReceive", "==", userInfo.value.uid)
+      // orderBy("createdAt", "desc")
     );
     const querySnapshot = await getDocs(q);
 
@@ -118,9 +118,9 @@ async function getChatListChat() {
         newData.push(document.data());
         // console.log(document.data());
         // return document.data();
+        chatList.data = newData;
       });
       // console.log(newData);
-      chatList.data = newData;
 
       // da thay doi cau truc database nen khong can cai nay
       // console.log(chatList.data);
@@ -195,15 +195,20 @@ async function watchChatModify() {
     // let mess
     eee.forEach(async (document) => {
       // console.log("--------------------------------");
-      // console.log(document.get("chatData")?.pop());
+      // console.log(document.data());
       const pop = document.get("chatData")?.pop();
       const chatId = document.get("chatId");
       const theme = document.get("theme");
+      const id = document.get("chatId");
       // console.log(pop?.createdAt);
       // console.log(currentChatId.value);
       // console.log("theo doi tin nhan hard code trong AppProvider");
+      // console.log(pop);
+      // console.log(id);
+      if (pop?.type === "theme") {
+        chatStore.setThemeById(id, theme);
+      }
       chatStore.addChatDataContent({ chatId, pop });
-      userApp.setTheme(theme);
       //   friends.data = document.data();
     });
   });

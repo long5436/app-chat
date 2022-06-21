@@ -6,6 +6,7 @@ import sortArray from "sort-objects-array";
 import { useUserStore } from "@/stores/user";
 import { useAppStore } from "@/stores/app";
 import { useChatStore } from "@/stores/chat";
+import { useRouter, useRoute } from "vue-router";
 import ChatListAvt from "./ChatListAvt.vue";
 import ChatListDisplayName from "./chatListDisplayName.vue";
 import { getUser, getChat } from "@/firebase/services";
@@ -16,6 +17,7 @@ import {
   ref,
   watch,
   computed,
+  onMounted,
 } from "vue";
 
 import {
@@ -28,6 +30,8 @@ import {
 } from "@/firebase/config";
 
 //
+const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 const chatStore = useChatStore();
 const appStore = useAppStore();
@@ -79,24 +83,16 @@ watch(chatList, (newVal) => {
   });
 });
 
-watchEffect(() => {});
-
-// methods
-
-async function handleClick(data) {
-  // console.log(data.friendInfo);
-  // console.log(chatStore);
-  if (!chatStore.getChatContent(data.id)) {
-    const chatContentData = await getChat(data.id);
-    // console.log(data);
-    chatStore.addChatData(chatContentData);
-  }
-
+function setDataChat(data) {
   let currentChatUser;
+  // console.log({
+  //   1: data.membersInfo[0].uid,
+  //   2: userInfo.value.uid,
+  // });
   if (data.membersInfo[0].uid === userInfo.value.uid) {
-    currentChatUser = data.membersInfo[0];
-  } else {
     currentChatUser = data.membersInfo[1];
+  } else {
+    currentChatUser = data.membersInfo[0];
   }
   // console.log(currentChatUser);
   // // console.log(data.chatData);
@@ -105,8 +101,54 @@ async function handleClick(data) {
     user: currentChatUser,
     id: data.id,
   });
-  appStore.setTheme(data.theme);
   currentChatId.value = data.id;
+}
+
+onMounted(async () => {
+  // console.log(route.params.id);
+  // const chatContentData = await getChat(route.params.id);
+  // chatStore.addChatData(chatContentData);
+
+  // console.log(chatContentData);
+
+  const unwatch = watch(chatList, (n) => {
+    // console.log(chatList.value);
+    // console.log(route.params.id);
+    const a = chatList.value.find((e) => +e.urlId === +route.params.id);
+    if (a) {
+      console.log("da vo");
+      handleClick(a);
+      // unwatch();
+    }
+  });
+
+  // setDataChat();
+});
+// methods
+
+async function handleClick(data) {
+  // console.log(data);
+  // console.log(data.friendInfo);
+  // console.log(chatStore);
+  if (!chatStore.getChatContent(data.id)) {
+    const chatContentData = await getChat(data.id);
+    // console.log(chatContentData);
+    const theme = chatContentData.theme;
+    chatStore.addChatData(chatContentData);
+    chatStore.setTheme(theme);
+  } else {
+    const theme = chatStore.getChatContent(data.id).theme;
+    chatStore.setTheme(theme);
+  }
+
+  setDataChat(data);
+
+  router.push({
+    name: "chat",
+    params: {
+      id: data.urlId,
+    },
+  });
 }
 </script>
 
@@ -121,32 +163,33 @@ async function handleClick(data) {
     </button>
   </div>
   <div :class="$style.listMessages">
-    <div
-      v-for="(i, index) in chatListSnapShot.data"
-      :key="index"
-      :class="[$style.item, { [$style.itemActive]: i.id === currentChatId }]"
-      @click="handleClick(i)"
-    >
-      <ChatListAvt :data="i" />
-      <div :class="$style.content">
-        <ChatListDisplayName :data="i" />
-        <div :class="$style.body">
-          <div>
-            <p :class="$style.message">{{ i.mess?.content }}</p>
-          </div>
-          <span v-if="i.mess">
-            . {{ formatTime(i.mess?.createdAt.seconds) }}</span
-          >
+    <template v-for="(i, index) in chatListSnapShot.data" :key="index">
+      <div
+        v-if="i.mess"
+        :class="[$style.item, { [$style.itemActive]: i.id === currentChatId }]"
+        @click="handleClick(i)"
+      >
+        <ChatListAvt :data="i" />
+        <div :class="$style.content">
+          <ChatListDisplayName :data="i" />
+          <div :class="$style.body">
+            <div>
+              <p :class="$style.message">{{ i.mess?.content }}</p>
+            </div>
+            <span v-if="i.mess">
+              . {{ formatTime(i.mess?.createdAt.seconds) }}</span
+            >
 
-          <span v-else> . {{ formatTime(i.createdAt?.seconds) }}</span>
+            <span v-else> . {{ formatTime(i.createdAt?.seconds) }}</span>
+          </div>
+        </div>
+        <div :class="$style.info" v-if="false">
+          <span v-if="i.mess">{{ formatTime(i.mess?.createdAt.seconds) }}</span>
+          <span v-else>{{ formatTime(i.createdAt?.seconds) }}</span>
+          <span :class="$style.noti" v-if="false"> 12 </span>
         </div>
       </div>
-      <div :class="$style.info" v-if="false">
-        <span v-if="i.mess">{{ formatTime(i.mess?.createdAt.seconds) }}</span>
-        <span v-else>{{ formatTime(i.createdAt?.seconds) }}</span>
-        <span :class="$style.noti" v-if="false"> 12 </span>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 <style lang="scss" module>

@@ -18,7 +18,7 @@ const appStore = useAppStore();
 const currentChatUser = computed(() => chatStore.getCurrentChatUser);
 
 //
-const currentTheme = computed(() => appStore.getTheme);
+const currentTheme = computed(() => chatStore.getTheme);
 // console.log(currentTheme);
 
 const background = computed(() => {

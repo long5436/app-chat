@@ -23,9 +23,9 @@ export const useUserStore = defineStore({
         this.userinfo.photoURL = data.photoURL;
         this.userinfo.uid = data.uid;
 
-        const a = await getUser("users", data.uid);
-
-        if (a.uid) {
+        const a = await getUser(data.uid);
+        // console.log(a);
+        if (a?.uid) {
           const ids = a.friends.map((e) => e.uid) || [];
 
           this.friendIds = [...[a.uid], ...ids];

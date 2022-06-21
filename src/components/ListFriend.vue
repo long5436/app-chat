@@ -1,11 +1,12 @@
 <script setup>
 import av2 from "@/assets/img/user.webp";
-import { watchEffect, reactive, computed } from "vue";
+import { watchEffect, reactive, computed, onMounted, ref } from "vue";
 import { useUserStore } from "../stores/user";
 import { useAppStore } from "@/stores/app";
 import { addDocument, getUser, getChatDocument } from "@/firebase/services";
 import createAvtString from "@/plugins/createAvtString";
 import { useRouter } from "vue-router";
+import _stringHash from "string-hash";
 
 //
 const appStore = useAppStore();
@@ -13,6 +14,16 @@ const userStore = useUserStore();
 const userInfo = computed(() => userStore.getUserinfo);
 const friends = computed(() => appStore.getListFriend);
 const router = useRouter();
+const isMobile = ref(false);
+
+isMobile.value = window.innerWidth <= 768 ? true : false;
+
+onMounted(() => {
+  window.addEventListener("resize", () => {
+    // console.log(window);
+    isMobile.value = window.innerWidth <= 768 ? true : false;
+  });
+});
 
 async function handleClickFriend(user) {
   const chat = await getChatDocument(userInfo.value.uid, user.uid);
@@ -20,8 +31,10 @@ async function handleClickFriend(user) {
   // console.log(user);
 
   if (!chat) {
-    addDocument("chats", {
+    const urlId = _stringHash(userInfo.value.uid + user.uid);
+    await addDocument("chats", {
       id: userInfo.value.uid + user.uid,
+      urlId: urlId,
       name: "",
       membersInfo: [userInfo.value, user],
       members: [userInfo.value.uid, user.uid],
@@ -40,6 +53,13 @@ async function handleClickFriend(user) {
         preview: false,
       },
     });
+
+    router.push({
+      name: "chat",
+      params: {
+        id: urlId,
+      },
+    });
   } else {
     router.push({ path: "/" });
   }
@@ -49,7 +69,7 @@ async function handleClickFriend(user) {
 </script>
 
 <template>
-  <div :class="$style.action">
+  <div :class="$style.action" v-if="false">
     <button :class="[$style.btn, $style.btnActive]">
       <span> Tất cả </span>
     </button>
@@ -79,9 +99,11 @@ async function handleClickFriend(user) {
           <span>{{ createAvtString(i.displayName).name }} </span>
         </div>
       </div>
-      <div :class="$style.content">
+      <div :class="$style.content" v-if="!isMobile">
         <div>
-          <h3 :class="$style.displayName">{{ i.displayName }}</h3>
+          <h3 :class="$style.displayName">
+            {{ i.displayName }}
+          </h3>
         </div>
         <button :class="$style.btn">
           <v-icon name="bi-chat-text" :class="$style.icon" />
@@ -129,7 +151,8 @@ async function handleClickFriend(user) {
 }
 
 .listFirend {
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   .item {
     display: flex;
     // border-bottom: 1px solid #ddd;
