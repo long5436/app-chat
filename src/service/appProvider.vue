@@ -212,7 +212,7 @@ async function watchChatModify() {
       //   friends.data = document.data();
     });
   });
-}
+};
 
 // goi lan dau khi khoi chay
 getNotifications();

@@ -52,11 +52,11 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 // local
-// connectAuthEmulator(auth, "http://localhost:9099");
-// if (window.location.hostname === "localhost") {
-//   connectFirestoreEmulator(db, "localhost", 8080);
-//   connectStorageEmulator(storage, "localhost", 9199);
-// }
+connectAuthEmulator(auth, "http://localhost:9099");
+if (window.location.hostname === "localhost") {
+  connectFirestoreEmulator(db, "localhost", 8080);
+  connectStorageEmulator(storage, "localhost", 9199);
+}
 
 const facebookProvider = new FacebookAuthProvider();
 const googleProvider = new GoogleAuthProvider();
